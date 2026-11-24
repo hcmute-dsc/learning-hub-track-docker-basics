@@ -1,0 +1,11 @@
+uid: 81b743e9-2e5c-4c4d-b5af-7f136209103d
+slug: dockerfile
+title: "Dockerfile, layer, cache và tag"
+summary: "Tự làm image chứa trang web của bạn trên nền nginx:alpine. Hiểu image được xếp từ các layer, cache giúp build nhanh thế nào, và cách đặt tag phiên bản."
+lessons:
+  - 01-first-dockerfile
+  - 02-layers-cache
+  - 03-tags
+exercises:
+  - dockerfile-quiz
+  - dockerize-site

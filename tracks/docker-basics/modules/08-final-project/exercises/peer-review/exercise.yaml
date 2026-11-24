@@ -1,0 +1,16 @@
+uid: 10d581fb-24bd-4094-97f4-1dc138078c80
+slug: peer-review
+title: "Review dự án của bạn khác"
+type: self_check
+difficulty: medium
+lesson: review-workflow
+estimatedMinutes: 60
+authors: [github:TienNHM]
+spec:
+  checklist:
+    - "Đã đọc README của bạn mình và chỉ làm theo những gì README ghi"
+    - "Đã clone, tạo .env từ .env.example, chạy docker compose up -d --wait và ghi lại kết quả docker compose ps"
+    - "Đã đi qua danh sách kiểm tra trong bài: mật khẩu trong file, tag cụ thể, volume, healthcheck, user không phải root, lịch sử .env"
+    - "Đã viết nhận xét trên pull request: ít nhất một điểm làm tốt và một gợi ý cụ thể, có lý do"
+    - "Nếu thấy bí mật bị lộ, đã nhắn riêng bạn đó và mentor thay vì bình luận công khai"
+    - "Đã dọn bằng docker compose down -v"

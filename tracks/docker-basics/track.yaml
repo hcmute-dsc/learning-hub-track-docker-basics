@@ -1,0 +1,36 @@
+# Track (lộ trình). Đặc tả đầy đủ: CONTENT-SPECIFICATION §3.1
+# https://github.com/hcmute-dsc/learning-hub-docs/blob/main/docs/product/CONTENT-SPECIFICATION.md
+
+# Khóa của track trong database. KHÔNG BAO GIỜ đổi (đổi là mất tiến độ học).
+uid: 01a20b90-146a-7da3-ab7a-0e4e3e13ac78
+# Đường dẫn trên web: /tracks/<slug>. Trùng tên thư mục tracks/<slug>/ và tên repo learning-hub-track-<slug>.
+slug: docker-basics
+title: "Docker và Compose cơ bản"
+summary: "Từ con số 0 tới chạy một ứng dụng nhiều service: hiểu image và container thật ra là gì, tự viết Dockerfile, làm image nhỏ và an toàn, giữ dữ liệu bằng volume, chạy cả hệ thống bằng Docker Compose, rồi đưa image lên GHCR. Không cần biết GitHub Actions."
+language: vi
+level: beginner
+estimatedHours: 15
+tags: [docker, docker-compose, container, devops, ghcr]
+outcomes:
+  - "Giải thích được image, container, layer, volume và network là gì, và container khác máy ảo ở đâu"
+  - "Chạy, xem log, vào trong và dọn dẹp container; viết Dockerfile đóng gói một trang web tĩnh"
+  - "Làm image nhỏ và an toàn hơn bằng multi-stage build, .dockerignore và user không phải root"
+  - "Dùng Docker Compose chạy trang web cùng Umami và Postgres, có .env và healthcheck, và tự gỡ các lỗi hay gặp"
+  - "Gắn tag phiên bản và đưa image lên GitHub Container Registry để máy khác kéo về chạy"
+maintainers: [github:TienNHM]
+license: CC-BY-SA-4.0
+# Thứ tự trên trang danh sách track (nhỏ đứng trước). Track actions-docker là 300.
+position: 320
+# Chương 1, 2, 4, 5 phát triển từ track actions-docker (cùng tác giả).
+source:
+  repo: hcmute-dsc/learning-hub-track-actions-docker
+  commit: 5fae2266646948785b32bc59b47276809792b75a
+modules:
+  - 01-images-containers
+  - 02-dockerfile
+  - 03-smaller-images
+  - 04-volumes-networks
+  - 05-compose
+  - 06-compose-in-practice
+  - 07-registry
+  - 08-final-project

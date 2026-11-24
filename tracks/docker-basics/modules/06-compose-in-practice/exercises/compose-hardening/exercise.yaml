@@ -1,0 +1,25 @@
+uid: ef42f0ac-6ebe-47b1-a07f-273b32d95f0b
+slug: compose-hardening
+title: "Stack Compose chạy được trên máy người khác"
+type: project
+difficulty: medium
+lesson: compose-debugging
+estimatedMinutes: 120
+requiresReview: true
+prerequisites:
+  - docker-basics/dockerfile/dockerize-site
+  - docker-basics/compose/compose-stack-lab
+authors: [github:TienNHM]
+spec:
+  deliverable: github_repo_or_pr
+  rubric:
+    - criterion: "Clone mới, cp .env.example .env, docker compose up -d --wait: cả 3 service healthy; trang và Umami mở được"
+      weight: 3
+    - criterion: "Không có mật khẩu trong compose.yaml; .env nằm trong .gitignore và .dockerignore; .env chưa từng được commit"
+      weight: 3
+    - criterion: "Có healthcheck cho cả 3 service; umami dùng depends_on với condition: service_healthy; db có named volume"
+      weight: 2
+    - criterion: "Image có tag cụ thể; cổng web đổi được bằng WEB_PORT mà không sửa compose.yaml"
+      weight: 1
+    - criterion: "README: các bước chạy (kể cả tạo .env), và mục Gỡ lỗi ghi lại một lỗi bạn đã gặp: triệu chứng, cách tìm, cách sửa"
+      weight: 2

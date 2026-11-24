@@ -1,0 +1,10 @@
+uid: ed49190d-3a7a-4f92-ac25-8549746d2b18
+slug: compose
+title: "Docker Compose: cả hệ thống trong một file"
+summary: "Viết compose.yaml chạy trang web cùng Umami (thống kê truy cập) và Postgres bằng một lệnh. Hiểu Compose tự làm thay bạn những gì: network, volume, tên máy, thứ tự khởi động."
+lessons:
+  - 01-compose-basics
+  - 02-umami-postgres
+exercises:
+  - compose-quiz
+  - compose-stack-lab

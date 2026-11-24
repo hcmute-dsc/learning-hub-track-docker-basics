@@ -1,0 +1,18 @@
+uid: e38b63c6-87a8-4c2a-98a6-6962198a927d
+slug: slim-image-lab
+title: "Thực hành: làm image nhỏ và sạch"
+type: self_check
+difficulty: medium
+lesson: dockerignore-non-root
+estimatedMinutes: 45
+prerequisites:
+  - docker-basics/dockerfile/dockerize-site
+authors: [github:TienNHM]
+spec:
+  checklist:
+    - "Đã build hello-go:single và hello-go:multi, ghi lại kích thước của cả hai từ docker image ls"
+    - "curl tới http://localhost:8080 trả lời câu Xin chào từ Go với user app"
+    - "Đã thấy .env nằm trong /src của image khi chưa có .dockerignore, và biến mất khi đã có"
+    - "docker exec … whoami in app với image multi, root với image single"
+    - "Đã thêm .dockerignore (ít nhất .git và .env) vào repo trang web của bài dự án chương 2"
+    - "Đã xóa các container thử nghiệm bằng docker rm -f"

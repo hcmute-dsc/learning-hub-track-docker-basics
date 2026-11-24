@@ -1,0 +1,19 @@
+uid: 31c33273-995e-47b6-859f-ecaf02a0514a
+slug: compose-stack-lab
+title: "Thực hành: trang web, Umami và Postgres trên máy"
+type: self_check
+difficulty: medium
+lesson: umami-postgres
+estimatedMinutes: 60
+prerequisites:
+  - docker-basics/dockerfile/dockerize-site
+authors: [github:TienNHM]
+spec:
+  checklist:
+    - "docker compose up -d chạy xong, docker compose ps thấy đủ 3 service đang chạy"
+    - "curl tới localhost:3000/api/heartbeat trả về {\"ok\":true}"
+    - "Đã tìm thấy trong docker compose logs umami lần kết nối database thất bại rồi thành công, và giải thích được vì sao"
+    - "docker compose exec web wget -qO- http://umami:3000/api/heartbeat chạy được"
+    - "Đã đổi mật khẩu admin mặc định của Umami"
+    - "Đã gắn mã theo dõi vào trang web và thấy lượt xem tăng trong Umami"
+    - "Sau docker compose down rồi up -d, website và lượt xem trong Umami vẫn còn"

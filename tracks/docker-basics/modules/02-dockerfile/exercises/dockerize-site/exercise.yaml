@@ -1,0 +1,22 @@
+uid: a78fb4a2-7f1e-437f-9324-82eeed5accfa
+slug: dockerize-site
+title: "Đóng gói trang web của bạn bằng Docker"
+type: project
+difficulty: medium
+lesson: tags
+estimatedMinutes: 90
+requiresReview: true
+prerequisites:
+  - docker-basics/images-containers/docker-hello
+authors: [github:TienNHM]
+spec:
+  deliverable: github_repo_or_pr
+  rubric:
+    - criterion: "Build và chạy được đúng theo README; trang hiện đủ nội dung và CSS ở localhost:8080"
+      weight: 3
+    - criterion: "Chỉ thư mục trang web được chép vào image; /Dockerfile và /README.md trả về 404"
+      weight: 2
+    - criterion: "Image nền có tag cụ thể (không latest); có image tag phiên bản 1.0.0"
+      weight: 1
+    - criterion: "README có mục Chạy bằng Docker: lệnh build/run, output docker image ls và docker history (dạng text)"
+      weight: 2

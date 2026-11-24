@@ -1,0 +1,12 @@
+uid: a296e6ca-3fb0-4586-ad26-29611686b9c8
+slug: images-containers
+# Chỉ ghi tên chương: site tự thêm "Chương 1:".
+title: "Image và container"
+summary: "Docker giải quyết vấn đề gì, image và container thật ra là gì, container khác máy ảo ở đâu. Chạy container đầu tiên, mở cổng, xem log, vào trong và dọn dẹp."
+lessons:
+  - 01-why-docker
+  - 02-first-container
+  - 03-container-lifecycle
+exercises:
+  - docker-hello
+  - docker-quiz

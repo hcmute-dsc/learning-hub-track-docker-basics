@@ -1,0 +1,67 @@
+uid: f13a9074-6bfb-4140-af4c-c6b10c219a21
+slug: docker-quiz
+title: "Kiểm tra: image và container"
+type: quiz
+difficulty: easy
+lesson: container-lifecycle
+estimatedMinutes: 15
+authors: [github:TienNHM]
+spec:
+  passScore: 0.75
+  questions:
+    - id: q1
+      type: single
+      prompt: "Câu nào đúng về image và container?"
+      options:
+        - "Một image chỉ chạy được một container"
+        - "Container là một bản đang chạy của image; một image chạy được nhiều container"
+        - "Xóa container thì image cũng bị xóa"
+      answer: 1
+      explanation: "Image là bản chỉ đọc, như công thức nấu ăn. Mỗi `docker run` tạo một container mới từ nó, như nấu thêm một món."
+    - id: q2
+      type: single
+      prompt: "Với hệ điều hành, một container thật ra là gì?"
+      options:
+        - "Một máy ảo có kernel riêng"
+        - "Một tiến trình bình thường bị cách ly, dùng chung kernel của máy"
+        - "Một file nén chứa ứng dụng"
+      answer: 1
+      explanation: "Container dùng chung kernel Linux của máy, chỉ bị cách ly về file, tiến trình, mạng. Máy ảo mới có kernel riêng."
+    - id: q3
+      type: single
+      prompt: "Vì sao trên Windows phải mở Docker Desktop (có WSL2) thì container mới chạy được?"
+      options:
+        - "Vì container cần kernel Linux, và Docker Desktop chạy một máy Linux nhỏ để cung cấp nó"
+        - "Vì Docker Desktop là trình duyệt để mở container"
+        - "Vì Windows cấm chạy tiến trình"
+      answer: 0
+      explanation: "Windows không có kernel Linux. Docker Desktop chạy một máy Linux nhỏ trong WSL2, mọi container chạy trong đó."
+    - id: q4
+      type: single
+      prompt: "Lệnh `docker run -d -p 3000:80 nginx:1.30-alpine`. Mở trang ở đâu?"
+      options: ["http://localhost:80", "http://localhost:3000", "http://localhost:8080"]
+      answer: 1
+      explanation: "`-p` là `cổng-máy-bạn:cổng-trong-container`, nên trên máy bạn là cổng 3000."
+    - id: q5
+      type: single
+      prompt: "Container `web` đang ở trạng thái Exited. Lệnh nào chạy lại ĐÚNG container đó (cùng tên, cùng file)?"
+      options: ["docker run web", "docker start web", "docker exec web"]
+      answer: 1
+      explanation: "`start` chạy lại container cũ. `run` luôn tạo container mới; `exec` chỉ chạy được trong container đang chạy."
+    - id: q6
+      type: single
+      prompt: "Container không chạy như ý. Lệnh nào nên dùng đầu tiên để tìm nguyên nhân?"
+      options: ["docker logs <tên>", "docker rm <tên>", "docker pull <image>"]
+      answer: 0
+      explanation: "`docker logs` in những gì tiến trình trong container đã in ra, thường có ngay thông báo lỗi."
+    - id: q7
+      type: multiple
+      prompt: "Container ở trạng thái nào thì file nó tạo ra bên trong VẪN CÒN?"
+      options: ["Running", "Exited", "Removed"]
+      answer: [0, 1]
+      explanation: "Lớp ghi của container còn đến khi container bị xóa. Exited giống máy tắt: file vẫn còn."
+    - id: q8
+      type: short_text
+      prompt: "Bạn chạy container mới với `-p 8080:80` và gặp lỗi `port is already allocated`. Gõ lệnh liệt kê các container đang chạy để tìm container đang giữ cổng."
+      answer: ["docker ps", "docker container ls", "docker container ps"]
+      explanation: "`docker ps` có cột PORTS cho biết container nào đang dùng cổng 8080."

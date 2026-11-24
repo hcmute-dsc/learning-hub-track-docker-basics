@@ -1,0 +1,29 @@
+uid: 07c97aff-5320-4412-b542-f6d8129ab393
+slug: final-project
+title: "Đóng gói một ứng dụng nhiều service"
+type: project
+difficulty: hard
+lesson: project-guide
+estimatedMinutes: 300
+requiresReview: true
+prerequisites:
+  - docker-basics/compose-in-practice/compose-hardening
+  - docker-basics/registry/push-and-pull
+authors: [github:TienNHM]
+spec:
+  deliverable: github_repo_or_pr
+  rubric:
+    - criterion: "Chạy được: clone mới, cp .env.example .env, docker compose up -d --wait là mọi service (ít nhất 3, có database) healthy; các trang mở được"
+      weight: 25
+    - criterion: "Dockerfile: image tự build dùng multi-stage khi cần build, chạy bằng user không phải root, có .dockerignore; mọi image có tag cụ thể"
+      weight: 20
+    - criterion: "Compose: healthcheck cho mọi service, depends_on với condition: service_healthy, named volume cho database, database không mở ports"
+      weight: 15
+    - criterion: "Bí mật: không có mật khẩu trong file được commit; .env trong .gitignore và .dockerignore; .env chưa từng có trong lịch sử Git; image không chứa .env"
+      weight: 15
+    - criterion: "Registry: image tự build có trên GHCR, tag semver, public, pull và chạy được khi chưa đăng nhập"
+      weight: 10
+    - criterion: "README: mô tả, sơ đồ service, cách chạy (kể cả tạo .env, lệnh PowerShell), cổng, chạy từ GHCR, mục gỡ lỗi"
+      weight: 10
+    - criterion: "Quy trình nhóm: nộp bằng pull request, có ít nhất một review của bạn khác và đã phản hồi các góp ý"
+      weight: 5

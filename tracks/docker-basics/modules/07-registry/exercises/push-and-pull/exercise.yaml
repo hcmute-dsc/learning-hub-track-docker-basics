@@ -1,0 +1,19 @@
+uid: 24e5a834-e337-4288-9055-ed4ecfe14264
+slug: push-and-pull
+title: "Thực hành: push lên GHCR, pull trên máy khác"
+type: self_check
+difficulty: medium
+lesson: versions-and-pull
+estimatedMinutes: 50
+prerequisites:
+  - docker-basics/dockerfile/dockerize-site
+authors: [github:TienNHM]
+spec:
+  checklist:
+    - "Đã tạo PAT (classic) chỉ có quyền write:packages, hạn dùng ngắn, và không dán nó ở đâu ngoài dấu nhắc Password"
+    - "docker login ghcr.io báo Login Succeeded"
+    - "Đã push ghcr.io/<tên-github>/my-site:1.0.0 và thấy package trên tab Packages của GitHub"
+    - "Đã push thêm một bản sửa nhỏ với tag tăng đúng theo semver, kèm tag latest"
+    - "Đã đổi package sang public sau khi kiểm tra image không chứa .env"
+    - "Đã docker logout ghcr.io rồi pull và chạy được image (trên máy khác, Codespaces, hoặc sau khi xóa image cục bộ)"
+    - "Đã thêm link package vào README của repo trang web"

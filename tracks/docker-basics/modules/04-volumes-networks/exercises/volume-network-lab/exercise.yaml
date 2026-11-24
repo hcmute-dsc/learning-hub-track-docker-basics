@@ -1,0 +1,16 @@
+uid: 27623ee3-f8fe-4a13-9bd0-f5f501ffc8c8
+slug: volume-network-lab
+title: "Thực hành: volume và network trên máy"
+type: self_check
+difficulty: easy
+lesson: networks
+estimatedMinutes: 40
+authors: [github:TienNHM]
+spec:
+  checklist:
+    - "Đã thấy bảng notes MẤT khi chạy Postgres không có volume rồi tạo lại container"
+    - "Đã thấy bảng notes CÒN khi dùng volume pgdata"
+    - "Đã chạy psql -h db từ một container khác trên network lab và đếm được 1 dòng"
+    - "Đã thấy container ngoài network lab không tìm thấy tên db"
+    - "Đã thử bind mount thư mục site/ với nginx, sửa file và thấy trang đổi ngay"
+    - "Đã dọn container, network lab và volume pgdata"

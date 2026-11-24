@@ -1,0 +1,10 @@
+uid: 6f0986f2-6d3c-4467-88a4-2a75c073f860
+slug: smaller-images
+title: "Image nhỏ và an toàn hơn"
+summary: "Multi-stage build tách bộ công cụ build khỏi image chạy, làm image nhỏ đi nhiều lần. Dùng .dockerignore để không lọt file thừa và file bí mật, và chạy container bằng user không phải root."
+lessons:
+  - 01-multi-stage
+  - 02-dockerignore-non-root
+exercises:
+  - smaller-images-quiz
+  - slim-image-lab

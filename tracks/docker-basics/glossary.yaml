@@ -1,0 +1,523 @@
+# Từ vựng của track (TEACHING.md T1, CONTENT-SPECIFICATION §3.1c).
+# Site tạo từ file này: tab "Từ vựng", hộp "Từ mới trong bài" của mỗi bài (từ `terms:`
+# trong front matter của bài), và chú thích ở lần đầu từ đó xuất hiện trong bài.
+#
+#   term       bắt buộc  chữ người học gặp, giữ tiếng Anh
+#   expansion            dạng đầy đủ, khi term là viết tắt hoặc rút gọn
+#   literal              nghĩa đen của chữ, tiếng Việt
+#   meaning    bắt buộc  nó làm gì trong track này, một hai câu
+#   example              một lệnh hoặc một dòng có dùng chữ này
+#   see                  từ liên quan, phải có trong file này
+
+# ---- Chương 1: image và container ----
+
+- term: Docker
+  literal: công nhân bốc xếp ở bến cảng
+  meaning: Công cụ đóng gói ứng dụng cùng mọi thứ nó cần thành image, rồi chạy image đó thành container giống nhau trên mọi máy.
+  example: docker --version
+  see: [image, container]
+
+- term: image
+  literal: ảnh, bản chụp
+  meaning: Bản đóng gói CHỈ ĐỌC của một ứng dụng gồm hệ điều hành tối giản, phần mềm, file và lệnh khởi động. Giống công thức nấu ăn, hay class trong lập trình.
+  example: nginx:1.30-alpine
+  see: [container, layer, tag]
+
+- term: container
+  literal: thùng hàng (container chở hàng)
+  meaning: Một bản ĐANG CHẠY của image. Với hệ điều hành, nó là một tiến trình bình thường bị cách ly, có file, mạng và tên máy riêng. Giống món ăn nấu từ công thức, hay object tạo từ class.
+  example: docker run nginx:1.30-alpine
+  see: [image, virtual machine]
+
+- term: registry
+  literal: sổ đăng ký, kho lưu
+  meaning: Kho chứa image trên mạng để tải về và chia sẻ, ví dụ Docker Hub và GHCR.
+  example: docker pull nginx:1.30-alpine
+  see: [pull, push, Docker Hub, GHCR]
+
+- term: virtual machine
+  expansion: VM
+  literal: máy ảo
+  meaning: Một máy tính giả lập hoàn chỉnh, có hệ điều hành và kernel riêng. Nặng hơn container nhiều vì phải chạy cả một hệ điều hành.
+  see: [container, kernel]
+
+- term: kernel
+  literal: nhân, lõi
+  meaning: Phần lõi của hệ điều hành, quản lý CPU, bộ nhớ, file và mạng. Mọi container trên một máy dùng chung kernel Linux của máy đó.
+  see: [virtual machine, container]
+
+- term: Docker Desktop
+  meaning: Ứng dụng cài Docker trên Windows và macOS. Nó chạy một máy Linux nhỏ ở bên dưới (trên Windows là WSL2) vì container cần kernel Linux.
+  see: [WSL, kernel]
+
+- term: WSL
+  expansion: Windows Subsystem for Linux
+  literal: hệ thống con Linux cho Windows
+  meaning: Tính năng của Windows chạy được Linux bên trong Windows. Docker Desktop dùng WSL2 để có kernel Linux.
+  example: wsl --install
+  see: [Docker Desktop]
+
+- term: daemon
+  literal: con quỷ nhỏ (chương trình chạy ngầm)
+  meaning: Chương trình chạy nền của Docker, làm mọi việc thật sự như tải image, tạo container. Lệnh docker chỉ gửi yêu cầu tới daemon.
+  see: [Docker Desktop]
+
+- term: pull
+  literal: kéo
+  meaning: Tải một image từ registry về máy. docker run tự pull nếu máy chưa có image.
+  example: docker pull nginx:1.30-alpine
+  see: [registry, push]
+
+- term: docker run
+  literal: chạy
+  meaning: Tạo một container mới từ image rồi khởi động nó. Mỗi lần docker run là một container MỚI.
+  example: docker run -d --name web -p 8080:80 nginx:1.30-alpine
+  see: [container, detached]
+
+- term: detached
+  expansion: cờ -d
+  literal: tách ra
+  meaning: Chạy container ở chế độ nền, trả lại terminal cho bạn ngay.
+  example: docker run -d nginx:1.30-alpine
+  see: [docker run, logs]
+
+- term: port
+  literal: cổng
+  meaning: Số hiệu (0 tới 65535) để phân biệt các chương trình mạng trên cùng một máy. nginx lắng nghe cổng 80, Postgres cổng 5432.
+  see: [publish]
+
+- term: publish
+  expansion: cờ -p
+  literal: công bố, mở ra
+  meaning: Nối một cổng trên máy bạn với một cổng trong container, theo dạng cổng-máy-bạn:cổng-trong-container.
+  example: docker run -p 8080:80 nginx:1.30-alpine
+  see: [port]
+
+- term: ps
+  expansion: process status
+  literal: trạng thái tiến trình
+  meaning: Liệt kê container đang chạy. Thêm -a (all) để thấy cả container đã dừng.
+  example: docker ps -a
+  see: [container]
+
+- term: logs
+  literal: nhật ký
+  meaning: Những gì tiến trình trong container in ra màn hình. Chỗ xem đầu tiên khi container chạy không như ý.
+  example: docker logs -f web
+  see: [detached]
+
+- term: exec
+  expansion: execute
+  literal: thực thi
+  meaning: Chạy thêm một lệnh bên trong một container đang chạy.
+  example: docker exec web ls /usr/share/nginx/html
+  see: [interactive]
+
+- term: interactive
+  expansion: cờ -it (interactive + tty)
+  literal: tương tác
+  meaning: Giữ bàn phím và màn hình nối với lệnh trong container, để gõ lệnh như đang ngồi trong máy đó.
+  example: docker exec -it web sh
+  see: [exec]
+
+- term: environment variable
+  expansion: cờ -e
+  literal: biến môi trường
+  meaning: Cặp TÊN=giá trị đưa vào tiến trình lúc chạy. Nhiều image đọc cấu hình, như mật khẩu, từ biến môi trường.
+  example: docker run -e POSTGRES_PASSWORD=matkhau postgres:18-alpine
+  see: [.env]
+
+- term: stop
+  literal: dừng
+  meaning: Gửi tín hiệu cho tiến trình trong container tắt, container chuyển sang trạng thái Exited nhưng chưa bị xóa.
+  example: docker stop web
+  see: [rm]
+
+- term: rm
+  expansion: remove
+  literal: xóa
+  meaning: Xóa hẳn một container đã dừng cùng lớp ghi của nó. Thêm -f (force) để dừng và xóa luôn container đang chạy.
+  example: docker rm -f web
+  see: [stop, writable layer]
+
+# ---- Chương 2: Dockerfile ----
+
+- term: Dockerfile
+  literal: tệp của Docker
+  meaning: File văn bản liệt kê từng bước tạo một image. Docker đọc từ trên xuống. Tên file đúng là Dockerfile, không có đuôi.
+  example: FROM nginx:1.30-alpine
+  see: [build, FROM]
+
+- term: build
+  literal: xây dựng
+  meaning: Đọc Dockerfile và tạo ra image.
+  example: docker build -t my-site:dev .
+  see: [Dockerfile, build context]
+
+- term: base image
+  literal: image nền
+  meaning: Image bạn xây tiếp lên, ghi ở dòng FROM. Image của bạn thừa hưởng mọi thứ trong đó.
+  example: FROM nginx:1.30-alpine
+  see: [FROM]
+
+- term: FROM
+  literal: từ
+  meaning: Lệnh đầu tiên của Dockerfile, chọn base image.
+  example: FROM nginx:1.30-alpine
+  see: [base image]
+
+- term: COPY
+  literal: chép
+  meaning: Chép file từ build context trên máy bạn vào trong image.
+  example: COPY site/ /usr/share/nginx/html/
+  see: [build context]
+
+- term: EXPOSE
+  literal: phơi ra
+  meaning: Ghi chú container lắng nghe cổng nào. Nó KHÔNG tự mở cổng ra máy bạn; vẫn cần -p.
+  example: EXPOSE 80
+  see: [publish]
+
+- term: build context
+  literal: bối cảnh build
+  meaning: Thư mục bạn đưa cho docker build (dấu chấm cuối lệnh). COPY chỉ lấy được file trong thư mục này.
+  example: docker build -t my-site:dev .
+  see: [build, .dockerignore]
+
+- term: layer
+  literal: lớp
+  meaning: Một lớp thay đổi trong image. Mỗi lệnh FROM, COPY, RUN tạo một layer. Image là chồng các layer chỉ đọc.
+  example: docker history my-site:dev
+  see: [cache, writable layer]
+
+- term: writable layer
+  literal: lớp ghi được
+  meaning: Lớp mỏng riêng của mỗi container, nằm trên các layer chỉ đọc của image. Mọi file container tạo hay sửa nằm ở đây và mất khi container bị xóa.
+  see: [layer, volume]
+
+- term: cache
+  literal: bộ nhớ đệm
+  meaning: Docker giữ lại layer đã build. Bước nào có đầu vào giống lần trước thì dùng lại layer cũ (CACHED) thay vì chạy lại.
+  see: [layer]
+
+- term: RUN
+  literal: chạy
+  meaning: Lệnh Dockerfile chạy một câu lệnh lúc build, ví dụ cài thư viện, và lưu kết quả thành một layer.
+  example: RUN npm ci
+  see: [layer, CMD]
+
+- term: WORKDIR
+  expansion: working directory
+  literal: thư mục làm việc
+  meaning: Đặt thư mục hiện tại cho các lệnh sau trong Dockerfile, tự tạo nếu chưa có.
+  example: WORKDIR /app
+
+- term: tag
+  literal: nhãn
+  meaning: Phần sau dấu hai chấm trong tên image, thường là phiên bản. Một image có thể có nhiều tag.
+  example: my-site:1.0.0
+  see: [latest, semver]
+
+- term: latest
+  literal: mới nhất
+  meaning: Tag mặc định khi bạn không ghi tag. Chỉ là một cái tên, không tự cập nhật và không cho biết đó là phiên bản nào.
+  example: docker run nginx
+  see: [tag]
+
+- term: dangling image
+  literal: image lơ lửng
+  meaning: Image cũ không còn tên và tag, hiện là <none>, thường sinh ra sau nhiều lần build lại cùng tên.
+  example: docker image prune
+  see: [prune]
+
+- term: prune
+  literal: tỉa cành
+  meaning: Xóa hàng loạt thứ không còn dùng, như image lơ lửng hay container đã dừng.
+  example: docker image prune
+  see: [dangling image]
+
+# ---- Chương 3: image nhỏ ----
+
+- term: multi-stage build
+  literal: build nhiều giai đoạn
+  meaning: Dockerfile có nhiều dòng FROM. Giai đoạn đầu có đủ công cụ để build, giai đoạn cuối chỉ chép kết quả sang một image nhỏ.
+  see: [stage, artifact]
+
+- term: stage
+  literal: giai đoạn
+  meaning: Một phần của Dockerfile bắt đầu bằng FROM. Đặt tên bằng AS để giai đoạn sau chép file từ nó.
+  example: FROM golang:1.25-alpine AS build
+  see: [multi-stage build]
+
+- term: compile
+  literal: biên dịch
+  meaning: Dịch mã nguồn thành một file chương trình máy chạy được. Cần bộ công cụ lớn, nhưng file kết quả thường nhỏ.
+  example: go build -o /out/hello .
+  see: [artifact]
+
+- term: artifact
+  literal: sản phẩm, đồ tạo tác
+  meaning: Thứ được tạo ra từ bước build, ví dụ file chương trình đã biên dịch hay thư mục dist của trang web.
+  see: [compile]
+
+- term: CMD
+  expansion: command
+  literal: lệnh
+  meaning: Lệnh mặc định chạy khi container khởi động. Khác với RUN (chạy lúc build), CMD chạy lúc container chạy.
+  example: CMD ["hello"]
+  see: [RUN]
+
+- term: .dockerignore
+  literal: danh sách Docker bỏ qua
+  meaning: File liệt kê những gì KHÔNG đưa vào build context, cú pháp giống .gitignore. Giúp build nhanh hơn và không lọt file bí mật vào image.
+  example: .env
+  see: [build context, .gitignore]
+
+- term: root
+  literal: gốc
+  meaning: Tài khoản quản trị cao nhất trên Linux, làm được mọi thứ. Mặc định tiến trình trong container chạy bằng root.
+  see: [USER]
+
+- term: USER
+  literal: người dùng
+  meaning: Lệnh Dockerfile chọn tài khoản chạy các lệnh sau và chạy container, để không chạy bằng root.
+  example: USER app
+  see: [root]
+
+- term: attack surface
+  literal: bề mặt tấn công
+  meaning: Tổng những chỗ kẻ xấu có thể lợi dụng. Image càng ít phần mềm thừa, càng ít quyền, bề mặt tấn công càng nhỏ.
+  see: [root]
+
+# ---- Chương 4: volume và network ----
+
+- term: volume
+  literal: ổ chứa (như một ổ đĩa)
+  meaning: Vùng lưu trữ do Docker quản lý, nằm NGOÀI container. Gắn vào container thì dữ liệu còn lại khi container bị xóa.
+  example: docker volume ls
+  see: [named volume, mount, writable layer]
+
+- term: named volume
+  literal: volume có tên
+  meaning: Volume bạn đặt tên, ví dụ pgdata, để dùng lại cho container sau.
+  example: docker run -v pgdata:/var/lib/postgresql postgres:18-alpine
+  see: [volume]
+
+- term: mount
+  literal: gắn (như cắm ổ đĩa)
+  meaning: Gắn một volume hay một thư mục vào một đường dẫn trong container. Ghi vào đường dẫn đó là ghi vào volume.
+  example: -v pgdata:/var/lib/postgresql
+  see: [volume, bind mount]
+
+- term: bind mount
+  literal: gắn trói
+  meaning: Gắn thẳng một thư mục trên máy bạn vào container. Sửa file trên máy là container thấy ngay. Tiện khi đang phát triển.
+  example: -v ./site:/usr/share/nginx/html
+  see: [mount]
+
+- term: persist
+  literal: tồn tại lâu dài
+  meaning: Dữ liệu còn lại sau khi chương trình hay container tắt hoặc bị xóa.
+  see: [volume]
+
+- term: network
+  literal: mạng
+  meaning: Mạng ảo Docker tạo để nối các container. Trên network do bạn tạo, container gọi nhau bằng tên.
+  example: docker network create lab
+  see: [DNS]
+
+- term: DNS
+  expansion: Domain Name System
+  literal: hệ thống tên miền
+  meaning: Dịch vụ đổi tên (như db) thành địa chỉ IP. Docker có DNS nội bộ cho mỗi network do bạn tạo.
+  see: [network]
+
+- term: localhost
+  literal: máy cục bộ, chính máy này
+  meaning: Tên trỏ về CHÍNH máy đang gọi. Trong container, localhost là chính container đó, không phải máy bạn.
+  example: http://localhost:8080
+  see: [network]
+
+# ---- Chương 5: Compose ----
+
+- term: Compose
+  literal: soạn, sắp xếp
+  meaning: Công cụ đọc một file mô tả nhiều container, rồi tạo network, volume và chạy tất cả bằng một lệnh.
+  example: docker compose up -d
+  see: [service, compose.yaml]
+
+- term: compose.yaml
+  meaning: File mô tả các service, volume, network của một ứng dụng cho Docker Compose. Tên cũ là docker-compose.yml.
+  see: [Compose, YAML]
+
+- term: YAML
+  expansion: YAML Ain't Markup Language
+  literal: YAML không phải ngôn ngữ đánh dấu
+  meaning: Định dạng file cấu hình dùng thụt lề bằng dấu cách để thể hiện cấp bậc. Không dùng phím Tab.
+  see: [compose.yaml]
+
+- term: service
+  literal: dịch vụ
+  meaning: Một thành phần của ứng dụng trong compose.yaml, ví dụ web, umami, db. Tên service cũng là tên máy trong network.
+  see: [Compose]
+
+- term: up
+  literal: dựng lên
+  meaning: Tạo network, volume và chạy mọi service trong compose.yaml.
+  example: docker compose up -d
+  see: [down]
+
+- term: down
+  literal: hạ xuống
+  meaning: Dừng và xóa container và network của project. Volume vẫn giữ, trừ khi thêm -v.
+  example: docker compose down
+  see: [up]
+
+- term: Umami
+  meaning: Công cụ thống kê lượt xem trang web, mã nguồn mở, chạy bằng image có sẵn và lưu dữ liệu vào Postgres.
+  see: [service]
+
+- term: depends_on
+  literal: phụ thuộc vào
+  meaning: Khóa trong compose.yaml nói service này cần service kia khởi động trước.
+  example: "depends_on: [db]"
+  see: [healthcheck]
+
+- term: restart policy
+  literal: chính sách khởi động lại
+  meaning: Quy định Docker có tự chạy lại container khi nó dừng không. on-failure chạy lại khi container thoát vì lỗi.
+  example: "restart: on-failure"
+  see: [crash loop]
+
+# ---- Chương 6: Compose thực tế ----
+
+- term: .env
+  literal: file môi trường
+  meaning: File chứa các dòng TÊN=giá trị, thường là mật khẩu. Compose tự đọc file này. Không bao giờ commit lên Git.
+  example: POSTGRES_PASSWORD=doi-mat-khau-nay
+  see: [env_file, .env.example]
+
+- term: .env.example
+  meaning: Bản mẫu của .env, có đủ tên biến nhưng giá trị giả. File này được commit để người khác biết cần điền gì.
+  see: [.env]
+
+- term: env_file
+  literal: file biến môi trường
+  meaning: Khóa trong compose.yaml đưa MỌI biến trong một file vào bên trong container.
+  example: "env_file: .env"
+  see: [.env, variable substitution]
+
+- term: variable substitution
+  literal: thay thế biến
+  meaning: Compose thay chữ ${TÊN} trong compose.yaml bằng giá trị lấy từ .env hoặc từ terminal, trước khi chạy.
+  example: "POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}"
+  see: [.env, env_file]
+
+- term: .gitignore
+  meaning: File liệt kê những gì Git không theo dõi. Thêm .env vào đây để không lỡ commit mật khẩu.
+  example: .env
+  see: [.env]
+
+- term: healthcheck
+  literal: khám sức khỏe
+  meaning: Lệnh Docker chạy định kỳ trong container để hỏi ứng dụng đã sẵn sàng chưa. Lệnh trả về 0 thì container là healthy.
+  example: pg_isready -U umami -d umami
+  see: [healthy, depends_on]
+
+- term: healthy
+  literal: khỏe mạnh
+  meaning: Trạng thái của container khi healthcheck đã thành công. Các trạng thái khác là starting và unhealthy.
+  see: [healthcheck]
+
+- term: start_period
+  literal: thời gian khởi động
+  meaning: Khoảng thời gian đầu mà healthcheck thất bại chưa bị tính, để ứng dụng chậm có thời gian chuẩn bị.
+  example: "start_period: 30s"
+  see: [healthcheck]
+
+- term: crash loop
+  literal: vòng lặp sập
+  meaning: Container chạy, lỗi, thoát, được restart, lại lỗi, cứ thế mãi. docker compose ps hiện Restarting.
+  see: [restart policy, exit code]
+
+- term: exit code
+  literal: mã thoát
+  meaning: Con số tiến trình trả về khi kết thúc. 0 là thành công, khác 0 là lỗi. Hiện trong trạng thái Exited (1).
+  see: [crash loop]
+
+# ---- Chương 7: registry ----
+
+- term: GHCR
+  expansion: GitHub Container Registry
+  literal: kho container của GitHub
+  meaning: Registry của GitHub ở địa chỉ ghcr.io, gắn với tài khoản GitHub của bạn.
+  example: ghcr.io/ten-ban/my-site:1.0.0
+  see: [registry, Docker Hub]
+
+- term: Docker Hub
+  meaning: Registry mặc định của Docker ở docker.io. Image không ghi registry, như nginx, được lấy từ đây.
+  see: [registry, GHCR]
+
+- term: push
+  literal: đẩy
+  meaning: Tải một image từ máy bạn lên registry.
+  example: docker push ghcr.io/ten-ban/my-site:1.0.0
+  see: [pull, registry]
+
+- term: PAT
+  expansion: Personal Access Token
+  literal: mã truy cập cá nhân
+  meaning: Chuỗi bí mật GitHub cấp để dùng thay mật khẩu khi đăng nhập từ dòng lệnh. Có quyền giới hạn và hạn dùng. Lộ ra thì phải thu hồi ngay.
+  see: [login]
+
+- term: login
+  literal: đăng nhập
+  meaning: Lưu thông tin đăng nhập một registry trên máy để push hoặc pull image riêng tư.
+  example: docker login ghcr.io -u ten-ban
+  see: [PAT, push]
+
+- term: namespace
+  literal: không gian tên
+  meaning: Phần tên tài khoản hoặc tổ chức trong tên image, như ten-ban trong ghcr.io/ten-ban/my-site. Bạn chỉ push được vào namespace của mình.
+  see: [GHCR]
+
+- term: semver
+  expansion: semantic versioning
+  literal: đánh số phiên bản theo ngữ nghĩa
+  meaning: Cách ghi phiên bản MAJOR.MINOR.PATCH, ví dụ 1.4.2. Tăng PATCH khi sửa lỗi, MINOR khi thêm tính năng, MAJOR khi thay đổi làm hỏng cách dùng cũ.
+  example: my-site:1.4.2
+  see: [tag]
+
+- term: digest
+  literal: bản tóm tắt
+  meaning: Mã sha256 duy nhất của đúng một nội dung image. Tag có thể bị chuyển sang image khác, digest thì không bao giờ đổi.
+  example: nginx@sha256:8eb2b5...
+  see: [tag]
+
+- term: visibility
+  literal: mức hiển thị
+  meaning: Package trên GHCR là public (ai cũng pull được) hay private (phải đăng nhập và có quyền).
+  see: [GHCR]
+
+# ---- Chương 8: dự án cuối ----
+
+- term: README
+  literal: đọc tôi
+  meaning: File giới thiệu ở gốc repo, cho biết dự án làm gì, cần cài gì, chạy thế nào. Người khác đọc file này đầu tiên.
+  see: [rubric]
+
+- term: rubric
+  literal: bảng tiêu chí chấm
+  meaning: Danh sách tiêu chí mentor dùng để chấm bài, mỗi tiêu chí có trọng số.
+  see: [README]
+
+- term: pull request
+  expansion: PR
+  literal: yêu cầu kéo (gộp) thay đổi
+  meaning: Đề nghị gộp các commit từ một nhánh vào nhánh khác trên GitHub, để người khác xem và nhận xét trước.
+  see: [code review]
+
+- term: code review
+  literal: xem lại code
+  meaning: Một người khác đọc thay đổi của bạn, chạy thử và góp ý trước khi gộp.
+  see: [pull request]

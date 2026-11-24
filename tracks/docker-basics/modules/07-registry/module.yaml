@@ -1,0 +1,10 @@
+uid: 994329a6-7fb2-48e8-b0e4-afd791a35a45
+slug: registry
+title: "Đưa image lên registry"
+summary: "Đăng nhập GitHub Container Registry bằng Personal Access Token mà không để lộ token, gắn tag theo semver, push image lên GHCR (và biết cách làm với Docker Hub), rồi pull về chạy trên một máy khác."
+lessons:
+  - 01-push-to-ghcr
+  - 02-versions-and-pull
+exercises:
+  - registry-quiz
+  - push-and-pull
