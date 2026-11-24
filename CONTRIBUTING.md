@@ -18,7 +18,7 @@ Quy trình chung của dự án (vòng đời bug, review, Definition of Done): 
 
 ## Viết bài dễ hiểu
 
-Mọi bài học và bài tập phải đạt 6 tiêu chí trong [TEACHING.md](TEACHING.md): từ vựng, giải thích trước khi thực hành, mô hình tư duy, quy trình thực tế, cài đặt, hỏi bài. Bài mẫu áp dụng đủ 6 tiêu chí: [`03-teaching-standard.md`](tracks/example-track/modules/01-getting-started/lessons/03-teaching-standard.md). Mẫu Pull Request có checklist để tự kiểm tra; người review kiểm tra lại theo đúng checklist đó.
+Mọi bài học và bài tập phải đạt 6 tiêu chí trong [TEACHING.md](TEACHING.md): từ vựng, giải thích trước khi thực hành, mô hình tư duy, quy trình thực tế, cài đặt, hỏi bài. Bài áp dụng đủ 6 tiêu chí để tham khảo: [`03-container-lifecycle.md`](tracks/docker-basics/modules/01-images-containers/lessons/03-container-lifecycle.md) của track này (bài mẫu gốc nằm trong [learning-hub-track-template](https://github.com/hcmute-dsc/learning-hub-track-template)). Mẫu Pull Request có checklist để tự kiểm tra; người review kiểm tra lại theo đúng checklist đó.
 
 ## Quy tắc quan trọng
 

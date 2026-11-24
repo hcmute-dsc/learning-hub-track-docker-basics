@@ -127,7 +127,9 @@ Nếu `pull` báo `denied` hoặc `unauthorized`: package vẫn **private** (bà
 
 ![Sơ đồ push và pull. Máy của bạn có image my-site:1.1.0, đăng nhập bằng PAT rồi docker push lên kho ghcr.io/ten-ban/my-site có các tag 1.0.0, 1.1.0, 1.1 và latest. Một máy khác như máy mentor hay máy chủ docker pull về rồi docker run thành container, không cần mã nguồn. Ghi chú: push luôn cần đăng nhập bằng token, pull package public thì không cần, token không bao giờ dán ra ngoài.](../../../assets/registry-push-pull.png)
 
-## 5. Một image cho cả máy Intel/AMD và Mac chip Apple
+## 5. Nâng cao: một image cho cả máy Intel/AMD và Mac chip Apple
+
+> **Phần nâng cao, có thể học sau.** Máy Windows hay Linux thông thường thì bỏ qua được mục này. Chỉ **bắt buộc** khi bạn dùng Mac chip Apple và người khác (mentor, máy chủ) cần chạy image của bạn trên máy Intel/AMD.
 
 Máy tính dùng hai loại CPU phổ biến: **amd64** (đa số laptop Windows, máy chủ) và **arm64** (Mac chip Apple M1, M2…). Image build trên máy nào thì mặc định chỉ có bản cho **loại CPU của máy đó**. Bạn dùng Mac chip Apple, push `1.1.0`, mentor dùng Windows pull về sẽ gặp:
 
@@ -156,7 +158,25 @@ Kiểm tra image trên registry có đủ hai bản:
 docker buildx imagetools inspect ghcr.io/ten-ban/my-site:1.1.0
 ```
 
-**Đọc hiểu:** kết quả liệt kê các `Platform:`, phải có cả `linux/amd64` và `linux/arm64`.
+Kết quả thật khi CLB chạy thử (rút gọn):
+
+```text
+Name:      ghcr.io/ten-ban/my-site:1.1.0
+MediaType: application/vnd.oci.image.index.v1+json
+Digest:    sha256:bcad6792ac84…
+Manifests:
+  Name:        ghcr.io/ten-ban/my-site:1.1.0@sha256:3e5d901e6cf9…
+  Platform:    linux/amd64
+  Name:        ghcr.io/ten-ban/my-site:1.1.0@sha256:593cfeb89801…
+  Platform:    linux/arm64
+  Name:        ghcr.io/ten-ban/my-site:1.1.0@sha256:0800efba08ee…
+  Platform:    unknown/unknown
+  Annotations:
+    vnd.docker.reference.type:   attestation-manifest
+  …
+```
+
+**Đọc hiểu:** `Digest` trên cùng là của **danh sách** (*index*), trỏ tới từng bản bên dưới. Phải có cả `linux/amd64` và `linux/arm64`. Các mục `unknown/unknown` có `attestation-manifest` là **chứng từ build** (*attestation*: build ở đâu, từ gì) mà buildx tự gửi kèm, không phải một nền tảng; bỏ qua chúng. Máy nào pull thì Docker tự chọn đúng bản của máy đó.
 
 Máy Windows hay Linux amd64 thì không bắt buộc làm bước này: mentor dùng Mac chip Apple vẫn chạy được image amd64 qua giả lập (tab **Cài đặt**, mục 4), chỉ chậm hơn.
 
@@ -188,7 +208,7 @@ Nhờ tag phiên bản không bao giờ bị ghi đè, câu hỏi "máy chủ đ
 | `denied` / `unauthorized` khi pull | Package private, chưa đăng nhập | Đổi sang public, hoặc `docker login ghcr.io` |
 | `manifest unknown` / `not found` | Sai tag, hoặc chưa push tag đó | Xem tab Packages trên GitHub có những tag nào |
 | `no matching manifest for linux/arm64/v8` khi pull trên Mac chip Apple | Image build trên máy amd64 chỉ có bản amd64 | Thêm `--platform linux/amd64` khi `run` (tab **Cài đặt**, mục 4) |
-| `no matching manifest for linux/amd64` khi pull trên Windows/Linux | Image build trên Mac chip Apple chỉ có bản arm64 | Người push build lại bằng `docker buildx build --platform linux/amd64,linux/arm64 … --push .` (mục 5) |
+| `no matching manifest for linux/amd64` khi pull trên Windows/Linux | Image build trên Mac chip Apple chỉ có bản arm64 | Người push build lại bằng `docker buildx build --platform linux/amd64,linux/arm64 … --push .` (mục 5, nâng cao) |
 | `Multi-platform build is not supported for the docker driver` | Docker Desktop chưa bật containerd image store | Bật trong Settings → General, hoặc `docker buildx create --name multi --driver docker-container --use` (mục 5) |
 | `port is already allocated` | Container trang web cũ còn chạy | `docker ps`, `docker rm -f` |
 | Lỗi khác, hoặc chưa hiểu vì sao | | Nhắn mentor, công khai hay **nhắn riêng** đều được (tab **Cài đặt** → "Hỏi ở đâu"). **Che token** trước khi gửi |

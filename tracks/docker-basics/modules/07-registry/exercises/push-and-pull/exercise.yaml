@@ -16,5 +16,5 @@ spec:
     - "Đã push thêm một bản sửa nhỏ với tag tăng đúng theo semver, kèm tag latest"
     - "Đã đổi package sang public sau khi kiểm tra image không chứa .env"
     - "Đã docker logout ghcr.io rồi pull và chạy được image (trên máy khác, Codespaces, hoặc sau khi xóa image cục bộ)"
-    - "Nếu dùng Mac chip Apple: đã push bằng docker buildx build --platform linux/amd64,linux/arm64 và imagetools inspect thấy cả hai bản"
+    - "(Nâng cao, chỉ khi dùng Mac chip Apple) Đã push bằng docker buildx build --platform linux/amd64,linux/arm64 và imagetools inspect thấy cả hai bản"
     - "Đã thêm link package vào README của repo trang web"

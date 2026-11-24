@@ -109,13 +109,42 @@ Login Succeeded
 docker push ghcr.io/ten-ban/my-site:1.0.0
 ```
 
-**Đọc hiểu:** `push` (*đẩy*) tải image lên registry, **từng layer một** (chương 2). Lần push đầu tiên lên GHCR, mọi layer đều hiện `Pushed`, kể cả các layer nền của nginx: GHCR là registry khác Docker Hub, nó chưa có layer nào của bạn. Lần push sau (bản `1.0.1`, hay thêm tag `latest`), các layer không đổi hiện `Layer already exists` và không tải lại; chỉ layer `COPY site/` mới được tải. Đó là lợi ích của layer dùng chung. Dòng cuối có `digest: sha256:…` (bài sau giải thích).
+Output lần push đầu tiên (rút gọn; mã layer của bạn sẽ khác):
 
-Dùng Mac chip Apple (M1, M2…)? Image bạn build ra là bản **arm64**, máy amd64 của mentor sẽ không chạy được. Bài sau, mục 5, chỉ cách build cho cả hai loại máy.
+```text
+The push refers to repository [ghcr.io/ten-ban/my-site]
+3fe2b486249e: Waiting
+0a2538e70241: Waiting
+…
+3fe2b486249e: Pushed
+0a2538e70241: Pushed
+…
+1.0.0: digest: sha256:764b7563f5d5… size: 856
+```
+
+**Đọc hiểu:** `push` (*đẩy*) tải image lên registry, **từng layer một** (chương 2). Mỗi dòng bắt đầu bằng mã của một layer: `Waiting` là đang xếp hàng, `Pushed` là đã tải lên xong. Lần push đầu tiên lên GHCR, **mọi** layer đều hiện `Pushed`, kể cả các layer nền của nginx: GHCR là registry khác Docker Hub, nó chưa có layer nào của bạn. Dòng cuối có `digest: sha256:…` (bài sau giải thích).
+
+Push lần nữa, ví dụ thêm tag `latest` cho cùng image:
+
+```bash
+docker tag ghcr.io/ten-ban/my-site:1.0.0 ghcr.io/ten-ban/my-site:latest
+docker push ghcr.io/ten-ban/my-site:latest
+```
+
+```text
+3fe2b486249e: Layer already exists
+0a2538e70241: Layer already exists
+…
+latest: digest: sha256:764b7563f5d5… size: 856
+```
+
+**Đọc hiểu:** registry đã có mọi layer nên không tải lại gì, chỉ ghi thêm nhãn `latest`. Digest giống hệt bản `1.0.0`: cùng một image, hai nhãn (chương 2). Khi bạn sửa trang và push bản `1.0.1`, hầu hết các dòng là `Layer already exists`, chỉ khoảng hai dòng `Pushed`: layer `COPY site/` mới và một phần thông tin nhỏ đi kèm image. Đó là lợi ích của layer dùng chung: bản cập nhật chỉ tải phần thay đổi.
+
+Dùng Mac chip Apple (M1, M2…)? Image bạn build ra là bản **arm64**, máy amd64 của mentor sẽ không chạy được. Bài sau, mục 5 (phần **nâng cao**), chỉ cách build cho cả hai loại máy.
 
 ## 6. Xem và đổi visibility
 
-Mở `https://github.com/ten-ban?tab=packages`: thấy package `my-site`. Image mới push lên GHCR từ máy bạn mặc định là **private** (*riêng tư*): chỉ bạn pull được.
+Mở `https://github.com/ten-ban?tab=packages`: thấy package `my-site`. Theo tài liệu của GitHub, image push lên GHCR **từ máy bạn bằng PAT** tạo ra một package **private** (*riêng tư*) và **chưa nối với repo nào**: chỉ bạn pull được.
 
 **Visibility** (*mức hiển thị*):
 
@@ -125,6 +154,21 @@ Mở `https://github.com/ten-ban?tab=packages`: thấy package `my-site`. Image 
 | Dùng khi | Dự án mở, bài nộp cho mentor | Dự án công ty, có code không muốn công khai |
 
 Để mentor pull được bài của bạn: mở package → **Package settings** → **Change visibility** → **Public**. Trước khi đổi sang public, nhớ chương 3: image **không** được chứa `.env` hay bí mật nào, vì ai cũng tải về và mở ra được.
+
+Nên **nối package với repo** của bạn, để trang repo hiện package ở mục **Packages** và người xem biết image build từ code nào. Hai cách:
+
+- Trong trang package: **Package settings** → **Connect repository** (hoặc nút **Connect Repository** trên trang package), chọn repo `my-site`.
+- Hoặc thêm một dòng vào `Dockerfile`, rồi build và push lại; GHCR tự nối package với repo ghi trong đó:
+
+  ```dockerfile
+  LABEL org.opencontainers.image.source=https://github.com/ten-ban/my-site
+  ```
+
+  **Đọc hiểu:** `LABEL` gắn một nhãn thông tin (khóa = giá trị) vào image, không ảnh hưởng gì lúc chạy. Khóa `org.opencontainers.image.source` là quy ước chung cho "mã nguồn của image này ở đâu".
+
+**Khác biệt khi push từ GitHub Actions.** Nếu sau này bạn để GitHub Actions push (track **GitHub Actions và Docker**), dùng `GITHUB_TOKEN` của workflow và đặt tên image theo repo, ví dụ `ghcr.io/ten-ban/my-site/my-site:1.0.0`, thì package được **tự nối với repo** và **thừa hưởng visibility** của repo. CLB đã chạy thử trên một repo public: package mới tạo là **public** ngay, pull được mà không cần đăng nhập, không phải đổi gì.
+
+Trên trang package, mục **Versions** có thể hiện thêm vài phiên bản **untagged** (không có nhãn) bên cạnh `1.0.0`, `latest`. Đó là các phần thông tin Docker gửi kèm image (danh sách nền tảng, chứng từ build), không phải bản thừa; đừng xóa chúng.
 
 ## 7. Docker Hub thì sao?
 

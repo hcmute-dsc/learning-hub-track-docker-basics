@@ -6,7 +6,7 @@ uid: 01a20b90-146a-7da3-ab7a-0e4e3e13ac78
 # Đường dẫn trên web: /tracks/<slug>. Trùng tên thư mục tracks/<slug>/ và tên repo learning-hub-track-<slug>.
 slug: docker-basics
 title: "Docker và Compose cơ bản"
-summary: "Từ con số 0 tới chạy một ứng dụng nhiều service: hiểu image và container thật ra là gì, tự viết Dockerfile, làm image nhỏ và an toàn, giữ dữ liệu bằng volume, chạy cả hệ thống bằng Docker Compose, rồi đưa image lên GHCR. Không cần biết GitHub Actions."
+summary: "Từ con số 0 tới chạy một ứng dụng nhiều service: hiểu image và container thật ra là gì, tự viết Dockerfile, làm image nhỏ và an toàn, giữ dữ liệu bằng volume, chạy cả hệ thống bằng Docker Compose, rồi đưa image lên GHCR. Không cần biết GitHub Actions. Muốn đi trọn một dự án từ GitHub Actions tới Docker thì học track gộp \"GitHub Actions và Docker\" (actions-docker); chỉ cần Docker thì học track này."
 language: vi
 level: beginner
 estimatedHours: 15
