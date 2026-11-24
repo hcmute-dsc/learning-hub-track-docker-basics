@@ -10,7 +10,7 @@
 - bí mật trong `.env` ngoài Git, có `.env.example`;
 - healthcheck cho mọi service, `depends_on` với `condition: service_healthy`;
 - mọi image có tag cụ thể;
-- image tự build có trên GHCR, tag semver, package public, có bản `linux/amd64` (dùng Mac chip Apple thì build multi-platform, chương 7);
+- image tự build có trên GHCR, tag semver, package public, có bản `linux/amd64` (dùng Mac chip Apple thì build multi-platform theo phần nâng cao ở chương 7, bài 2, mục 5);
 - README đủ 7 mục.
 
 ## Nộp bài

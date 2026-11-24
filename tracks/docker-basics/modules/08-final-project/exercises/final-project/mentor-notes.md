@@ -6,7 +6,7 @@ Làm theo thứ tự, ghi điểm cho từng tiêu chí của rubric:
 2. **Clone mới và chạy:** `cp .env.example .env`, `docker compose up -d --wait`, `docker compose ps`. Mọi service phải healthy. Mở các trang trong README.
 3. **Kiểm tra image tự build:** `docker compose exec <service> whoami` không phải `root`. Đọc Dockerfile: có multi-stage khi ứng dụng cần build; stage cuối không chứa bộ công cụ build.
 4. **Bí mật:** đọc `compose.yaml`, `.env.example` tìm chuỗi giống mật khẩu thật; `git log --all --oneline -- .env` không in gì; `docker compose exec <service> ls -a <thư-mục-app>` không thấy `.env`.
-5. **GHCR:** `docker logout ghcr.io` rồi `docker pull` image trong README, chạy thử với cổng ghi trong README. Gặp `no matching manifest for linux/amd64` thì thành viên dùng Mac chip Apple và chỉ push bản arm64: xem `docker buildx imagetools inspect <image>`, hướng dẫn build lại bằng `docker buildx build --platform linux/amd64,linux/arm64 … --push` (chương 7, bài 2, mục 5). Mentor dùng Mac chip Apple thì kiểm tra ngược lại: image phải có `linux/amd64`.
+5. **GHCR:** `docker logout ghcr.io` rồi `docker pull` image trong README, chạy thử với cổng ghi trong README. Gặp `no matching manifest for linux/amd64` thì thành viên dùng Mac chip Apple và chỉ push bản arm64: xem `docker buildx imagetools inspect <image>`, hướng dẫn build lại bằng `docker buildx build --platform linux/amd64,linux/arm64 … --push` (chương 7, bài 2, mục 5, phần nâng cao). Mentor dùng Mac chip Apple thì kiểm tra ngược lại: image phải có `linux/amd64`.
 6. **PR:** có review của bạn khác với nhận xét cụ thể, và thành viên đã trả lời hoặc sửa.
 7. Xong thì `docker compose down -v` và xóa image đã pull.
 

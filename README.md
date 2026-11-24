@@ -36,7 +36,7 @@ Hướng dẫn đầy đủ, kể cả phần của Ban chủ nhiệm và các l
    ```
 
    Lệnh này đổi tên thư mục, slug, tên track, người phụ trách và sinh `uid` mới cho mọi bài.
-4. Đọc [TEACHING.md](TEACHING.md). Sửa `track.yaml`, viết bài học và bài tập theo các file mẫu (bài `03-teaching-standard` là ví dụ đạt chuẩn). Xóa những bài mẫu không dùng (nhớ xóa cả tên trong `module.yaml`).
+4. Đọc [TEACHING.md](TEACHING.md). Sửa `track.yaml`, viết bài học và bài tập theo các file mẫu (bài `03-teaching-standard` trong [learning-hub-track-template](https://github.com/hcmute-dsc/learning-hub-track-template) là ví dụ đạt chuẩn; trong repo này, xem [`03-container-lifecycle.md`](tracks/docker-basics/modules/01-images-containers/lessons/03-container-lifecycle.md)). Xóa những bài mẫu không dùng (nhớ xóa cả tên trong `module.yaml`).
 5. Kiểm tra trên máy, rồi mở Pull Request theo [CONTRIBUTING.md](CONTRIBUTING.md). CI `validate` phải xanh.
 6. **Đưa lên site:** mở PR vào `learning-hub-content`, đổi `commit` của track trong `tracks.yaml` sang commit mới nhất trên `main` của repo này. Ban chủ nhiệm duyệt PR đó rồi publish.
 
