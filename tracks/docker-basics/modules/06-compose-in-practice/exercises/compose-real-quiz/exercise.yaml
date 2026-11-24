@@ -1,0 +1,70 @@
+uid: 9f84577c-d3b9-4e51-9c3b-71e0f64cb81d
+slug: compose-real-quiz
+title: "Kiểm tra: .env, healthcheck, gỡ lỗi"
+type: quiz
+difficulty: medium
+lesson: compose-debugging
+estimatedMinutes: 15
+authors: [github:TienNHM]
+spec:
+  passScore: 0.75
+  questions:
+    - id: q1
+      type: multiple
+      prompt: "Những file nào nên commit lên repo?"
+      options: ["compose.yaml", ".env", ".env.example", ".gitignore có dòng .env"]
+      answer: [0, 2, 3]
+      explanation: "Chỉ `.env` chứa giá trị thật; nó phải nằm ngoài Git."
+    - id: q2
+      type: single
+      prompt: "Trong `compose.yaml`, `${POSTGRES_PASSWORD}` lấy giá trị từ đâu?"
+      options:
+        - "Từ biến môi trường đặt trong terminal nếu có (ưu tiên), nếu không thì từ file .env cạnh compose.yaml; Compose thay chữ trước khi chạy"
+        - "Từ khóa env_file của service"
+        - "Từ Dockerfile"
+      answer: 0
+      explanation: "Thay `${...}` dùng biến của terminal trước, rồi tới file `.env` của project. `env_file` là cơ chế khác: đưa biến vào bên trong container."
+    - id: q3
+      type: single
+      prompt: "`ports: - \"${WEB_PORT:-8080}:80\"` và file `.env` KHÔNG có dòng WEB_PORT. Trang mở ở cổng nào trên máy bạn?"
+      options: ["80", "8080", "Lỗi vì thiếu biến"]
+      answer: 1
+      explanation: "`:-8080` là giá trị mặc định khi biến trống."
+    - id: q4
+      type: single
+      prompt: "Khác nhau giữa `depends_on: [db]` và `depends_on: { db: { condition: service_healthy } }`?"
+      options:
+        - "Không khác"
+        - "Dạng ngắn chỉ chờ container db chạy; dạng có condition chờ db vượt healthcheck"
+        - "Dạng có condition khởi động db sau umami"
+      answer: 1
+      explanation: "Container chạy chưa chắc Postgres đã nhận kết nối; healthcheck `pg_isready` hỏi đúng điều đó."
+    - id: q5
+      type: single
+      prompt: "`docker compose ps` thấy `umami  Restarting (1) 5 seconds ago`. Đây là gì và nên làm gì trước?"
+      options:
+        - "Crash loop; đọc docker compose logs umami"
+        - "Umami đang cập nhật; chờ"
+        - "Bình thường; không cần làm gì"
+      answer: 0
+      explanation: "Container thoát với exit code 1 rồi được restart liên tục. Log cho biết nguyên nhân."
+    - id: q6
+      type: single
+      prompt: "Log Umami lặp lại `password authentication failed for user \"umami\"` ngay sau khi bạn đổi POSTGRES_PASSWORD trong .env. `db` vẫn healthy. Nguyên nhân?"
+      options:
+        - "Volume cũ giữ mật khẩu cũ; Postgres chỉ đặt mật khẩu lần đầu khởi tạo volume"
+        - "pg_isready kiểm tra sai mật khẩu"
+        - "Umami không đọc được file .env"
+      answer: 0
+      explanation: "Trả lại mật khẩu cũ, hoặc `docker compose down -v` nếu chấp nhận mất dữ liệu."
+    - id: q7
+      type: single
+      prompt: "Umami healthy, nhưng `curl localhost:3000` báo `Empty reply from server`. Nên kiểm tra gì trước?"
+      options: ["Mật khẩu trong .env", "Phần ports trong compose.yaml (cột PORTS)", "Image postgres"]
+      answer: 1
+      explanation: "Healthcheck chạy bên trong container nên vẫn xanh; lỗi ở đường chuyển tiếp cổng, ví dụ `3000:3001`."
+    - id: q8
+      type: short_text
+      prompt: "Gõ lệnh in ra compose.yaml sau khi đã thay mọi biến ${...}, để kiểm tra biến môi trường."
+      answer: ["docker compose config"]
+      explanation: "`docker compose config` không chạy gì, chỉ in cấu hình Compose thật sự hiểu."

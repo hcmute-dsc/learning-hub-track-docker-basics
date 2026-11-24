@@ -1,0 +1,68 @@
+uid: 911ec566-1b88-452f-92c5-050095c97c3b
+slug: dockerfile-quiz
+title: "Kiểm tra: Dockerfile, layer, cache, tag"
+type: quiz
+difficulty: easy
+lesson: tags
+estimatedMinutes: 15
+authors: [github:TienNHM]
+spec:
+  passScore: 0.75
+  questions:
+    - id: q1
+      type: single
+      prompt: "Dấu `.` ở cuối `docker build -t my-site:dev .` là gì?"
+      options:
+        - "Tên image"
+        - "Build context: thư mục Docker tìm Dockerfile và lấy file cho COPY"
+        - "Ký tự kết thúc lệnh, có thể bỏ"
+      answer: 1
+      explanation: "Thiếu nó, lệnh báo `requires 1 argument`. COPY chỉ lấy được file nằm trong thư mục này."
+    - id: q2
+      type: single
+      prompt: "Dockerfile có `EXPOSE 80`. Chạy `docker run -d my-site:dev` (không có `-p`). Mở được trang từ trình duyệt trên máy bạn không?"
+      options: ["Có, EXPOSE đã mở cổng", "Không, phải có -p để nối cổng ra máy"]
+      answer: 1
+      explanation: "`EXPOSE` chỉ là ghi chú. `-p` mới tạo đường chuyển tiếp từ máy bạn vào container."
+    - id: q3
+      type: single
+      prompt: "Bạn sửa `site/index.html`, tải lại trình duyệt nhưng trang không đổi. Vì sao?"
+      options:
+        - "Trình duyệt hỏng"
+        - "Image đã đóng băng bản cũ lúc build; phải build lại và chạy container mới"
+        - "nginx không đọc được file HTML"
+      answer: 1
+      explanation: "Container chạy từ image. Image chỉ đổi khi bạn build lại."
+    - id: q4
+      type: single
+      prompt: "Hai container chạy từ cùng image `my-site:dev`. Câu nào đúng?"
+      options:
+        - "Mỗi container chép nguyên image ra một bản riêng"
+        - "Hai container dùng chung các layer chỉ đọc, mỗi container có một lớp ghi riêng"
+        - "Container thứ hai ghi đè file của container thứ nhất"
+      answer: 1
+      explanation: "Layer của image chỉ đọc và dùng chung; lớp ghi là riêng của từng container."
+    - id: q5
+      type: single
+      prompt: "App Node.js: thứ tự nào tận dụng cache tốt nhất khi bạn sửa code hằng ngày?"
+      options:
+        - "COPY . . → RUN npm ci"
+        - "COPY package.json package-lock.json ./ → RUN npm ci → COPY . ."
+        - "RUN npm ci → COPY . ."
+      answer: 1
+      explanation: "Cài thư viện trước khi chép code, để sửa code không làm `npm ci` chạy lại. Phương án 3 không chạy được vì lúc `npm ci` chưa có `package.json`."
+    - id: q6
+      type: single
+      prompt: "Bạn chạy `docker tag my-site:dev my-site:1.0.0`. Trên máy giờ có mấy image (đếm theo ID)?"
+      options: ["Một image, hai tên", "Hai image giống nhau", "Không có image nào mới vì lệnh lỗi"]
+      answer: 0
+      explanation: "Tag chỉ là nhãn. `docker image ls` cho thấy hai dòng cùng một ID."
+    - id: q7
+      type: single
+      prompt: "Vì sao nên viết `FROM nginx:1.30-alpine` thay vì `FROM nginx`?"
+      options:
+        - "Vì nginx không có tag latest"
+        - "Vì latest có thể bị chuyển sang bản khác bất cứ lúc nào, làm kết quả build không lặp lại được"
+        - "Vì tag dài chạy nhanh hơn"
+      answer: 1
+      explanation: "Tag cụ thể giữ đúng phiên bản bạn đã thử."

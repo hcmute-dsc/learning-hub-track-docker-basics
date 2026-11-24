@@ -1,0 +1,10 @@
+uid: cd9176ca-5c33-41e4-ba88-b2c61b1903b5
+slug: volumes-networks
+title: "Volume và network"
+summary: "Vì sao dữ liệu mất khi xóa container, và cách giữ nó bằng named volume với Postgres. Cho các container gọi nhau bằng tên qua một network riêng."
+lessons:
+  - 01-volumes
+  - 02-networks
+exercises:
+  - volume-network-quiz
+  - volume-network-lab

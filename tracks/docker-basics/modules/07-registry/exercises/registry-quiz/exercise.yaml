@@ -1,0 +1,71 @@
+uid: 161c149e-aaca-438d-aa65-81f6608322c1
+slug: registry-quiz
+title: "Kiểm tra: registry, token, phiên bản"
+type: quiz
+difficulty: easy
+lesson: versions-and-pull
+estimatedMinutes: 15
+authors: [github:TienNHM]
+spec:
+  passScore: 0.75
+  questions:
+    - id: q1
+      type: single
+      prompt: "Tên image nào push được lên GHCR cho tài khoản GitHub `An-Nguyen`?"
+      options:
+        - "ghcr.io/An-Nguyen/my-site:1.0.0"
+        - "ghcr.io/an-nguyen/my-site:1.0.0"
+        - "my-site:1.0.0"
+      answer: 1
+      explanation: "Tên image phải viết thường và có đủ registry, namespace. Không ghi `ghcr.io/` thì Docker hiểu là Docker Hub."
+    - id: q2
+      type: single
+      prompt: "Đăng nhập `docker login ghcr.io`, ô Password nên dán gì?"
+      options:
+        - "Mật khẩu tài khoản GitHub"
+        - "Personal Access Token có quyền write:packages"
+        - "Mật khẩu Postgres trong .env"
+      answer: 1
+      explanation: "GitHub không nhận mật khẩu tài khoản ở dòng lệnh. PAT có quyền giới hạn và thu hồi được."
+    - id: q3
+      type: single
+      prompt: "Bạn lỡ dán PAT vào kênh Discord. Việc đầu tiên cần làm?"
+      options:
+        - "Xóa tin nhắn là đủ"
+        - "Thu hồi (Delete) token đó trên GitHub, rồi tạo token mới"
+        - "Đổi mật khẩu Postgres"
+      answer: 1
+      explanation: "Có thể đã có người hoặc bot đọc được. Thu hồi token làm nó vô dụng ngay lập tức."
+    - id: q4
+      type: single
+      prompt: "Trang web đang ở `1.4.2`. Bạn thêm trang \"Dự án\" mới, mọi thứ cũ vẫn chạy như trước. Phiên bản tiếp theo là gì?"
+      options: ["1.4.3", "1.5.0", "2.0.0"]
+      answer: 1
+      explanation: "Thêm tính năng mà không phá cách dùng cũ: tăng MINOR, đưa PATCH về 0."
+    - id: q5
+      type: single
+      prompt: "Vì sao máy chủ không nên chạy image tag `latest`?"
+      options:
+        - "Vì latest chạy chậm hơn"
+        - "Vì latest có thể bị dời sang bản khác, không biết đang chạy bản nào và khó rollback"
+        - "Vì GHCR không hỗ trợ latest"
+      answer: 1
+      explanation: "Tag phiên bản đầy đủ (hoặc digest) cho biết chính xác bản đang chạy."
+    - id: q6
+      type: single
+      prompt: "Điều gì đúng về digest `sha256:…` của một image?"
+      options:
+        - "Tính từ nội dung image và không bao giờ đổi"
+        - "Do bạn tự đặt như tag"
+        - "Đổi mỗi lần pull"
+      answer: 0
+      explanation: "Nội dung khác một byte là digest khác. Vì vậy ghim digest là chắc chắn nhất."
+    - id: q7
+      type: single
+      prompt: "Mentor `docker pull` image của bạn từ GHCR và gặp `denied`. Nguyên nhân hay gặp nhất?"
+      options:
+        - "Package còn private"
+        - "Mentor chưa cài Go"
+        - "Image quá nhỏ"
+      answer: 0
+      explanation: "Image push từ máy lên GHCR mặc định private. Đổi visibility sang public trong Package settings."

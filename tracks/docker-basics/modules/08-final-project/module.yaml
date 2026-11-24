@@ -1,0 +1,10 @@
+uid: 9cb9321c-3ada-480a-9c47-00caf247eebd
+slug: final-project
+title: "Dự án cuối"
+summary: "Đóng gói một ứng dụng nhiều service bằng Compose, đưa image của bạn lên GHCR, viết README để người lạ chạy được, nộp qua pull request và review bài của một bạn khác. Mentor chấm theo rubric."
+lessons:
+  - 01-project-guide
+  - 02-review-workflow
+exercises:
+  - final-project
+  - peer-review

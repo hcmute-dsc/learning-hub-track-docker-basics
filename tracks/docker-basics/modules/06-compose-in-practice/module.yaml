@@ -1,0 +1,11 @@
+uid: ffeabf07-9a53-4caf-8181-5a9bb02b0a8a
+slug: compose-in-practice
+title: "Compose thực tế: .env, healthcheck và gỡ lỗi"
+summary: "Đưa mật khẩu ra .env ngoài Git, cho Umami chờ đúng lúc Postgres sẵn sàng bằng healthcheck, và tự tìm ra nguyên nhân các lỗi hay gặp: trùng cổng, sai biến môi trường, crash loop."
+lessons:
+  - 01-env-files
+  - 02-healthcheck
+  - 03-debugging
+exercises:
+  - compose-real-quiz
+  - compose-hardening

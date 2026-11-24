@@ -1,0 +1,68 @@
+uid: 4d3175d3-0781-4059-b530-1309c6f75c15
+slug: volume-network-quiz
+title: "Kiểm tra: volume và network"
+type: quiz
+difficulty: easy
+lesson: networks
+estimatedMinutes: 15
+authors: [github:TienNHM]
+spec:
+  passScore: 0.75
+  questions:
+    - id: q1
+      type: single
+      prompt: "Chạy Postgres KHÔNG có volume, tạo bảng, rồi `docker rm -f db` và chạy lại. Bảng còn không?"
+      options: ["Còn", "Mất"]
+      answer: 1
+      explanation: "Container mới không thấy dữ liệu cũ. Vì image postgres khai báo VOLUME, mỗi container được Docker tạo một volume vô danh mới, trống; volume cũ có bảng notes bị bỏ rơi. Chỉ named volume mới cho container sau dùng lại."
+    - id: q2
+      type: single
+      prompt: "Với `postgres:18-alpine`, gắn named volume vào đâu để giữ dữ liệu?"
+      options: ["/var/lib/postgresql", "/usr/share/nginx/html", "/home/postgres"]
+      answer: 0
+      explanation: "Từ bản 18, image postgres lưu dữ liệu dưới `/var/lib/postgresql`."
+    - id: q3
+      type: single
+      prompt: "`docker rm -f db` có xóa luôn volume `pgdata` mà container đó dùng không?"
+      options: ["Có", "Không, volume vẫn còn đến khi bạn docker volume rm"]
+      answer: 1
+      explanation: "Volume nằm ngoài container, như ổ cứng rời."
+    - id: q4
+      type: single
+      prompt: "Container `umami` và `db` cùng một network. Trong cấu hình của Umami, địa chỉ database là gì?"
+      options: ["localhost:5432", "db:5432", "172.17.0.2:5432"]
+      answer: 1
+      explanation: "Container gọi nhau bằng tên. `localhost` trong container umami là chính nó; IP thì đổi mỗi lần tạo lại."
+    - id: q5
+      type: single
+      prompt: "Container `db` không có `-p`. Container khác CÙNG network có kết nối được tới cổng 5432 của nó không?"
+      options: ["Có", "Không, phải thêm -p 5432:5432"]
+      answer: 0
+      explanation: "Giữa các container cùng network, cổng thông sẵn. `-p` chỉ để máy bạn truy cập."
+    - id: q6
+      type: single
+      prompt: "Vì sao không ghi cứng địa chỉ IP của container vào cấu hình?"
+      options:
+        - "Vì IP do Docker cấp có thể đổi khi container được tạo lại"
+        - "Vì container không có IP"
+        - "Vì IP chỉ dùng được trên Windows"
+      answer: 0
+      explanation: "DNS nội bộ đổi tên thành IP hiện tại, nên dùng tên luôn đúng."
+    - id: q7
+      type: single
+      prompt: "Bạn chạy lại Postgres với `POSTGRES_PASSWORD` mới nhưng dùng volume cũ, và kết nối báo sai mật khẩu. Vì sao?"
+      options:
+        - "Postgres chỉ đặt mật khẩu lần đầu khởi tạo volume; volume cũ vẫn giữ mật khẩu cũ"
+        - "Biến môi trường không được truyền vào container"
+        - "Phải build lại image postgres"
+      answer: 0
+      explanation: "Dùng lại mật khẩu cũ, hoặc xóa volume (mất dữ liệu) để khởi tạo lại."
+    - id: q8
+      type: single
+      prompt: "Khi nào bind mount (`-v ./site:/usr/share/nginx/html`) hợp hơn named volume?"
+      options:
+        - "Khi lưu dữ liệu database lâu dài"
+        - "Khi đang phát triển và muốn sửa file trên máy là container thấy ngay"
+        - "Không bao giờ"
+      answer: 1
+      explanation: "Bind mount gắn thẳng thư mục trên máy bạn. Database thì dùng named volume."

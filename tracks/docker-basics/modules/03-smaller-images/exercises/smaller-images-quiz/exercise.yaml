@@ -1,0 +1,75 @@
+uid: 47e9df56-6b1f-4c1c-92aa-af053c5032e0
+slug: smaller-images-quiz
+title: "Kiểm tra: multi-stage, .dockerignore, non-root"
+type: quiz
+difficulty: medium
+lesson: dockerignore-non-root
+estimatedMinutes: 15
+authors: [github:TienNHM]
+spec:
+  passScore: 0.75
+  questions:
+    - id: q1
+      type: single
+      prompt: "Trong multi-stage build, image cuối cùng chứa gì?"
+      options:
+        - "Tất cả các stage gộp lại"
+        - "Chỉ những gì có trong stage cuối cùng"
+        - "Chỉ stage đầu tiên"
+      answer: 1
+      explanation: "Các stage trước chỉ dùng lúc build rồi bị bỏ lại. `COPY --from=` mang artifact sang stage cuối."
+    - id: q2
+      type: single
+      prompt: "`COPY --from=build /out/hello /usr/local/bin/hello` lấy file `/out/hello` từ đâu?"
+      options: ["Từ máy của bạn", "Từ stage tên build", "Từ Docker Hub"]
+      answer: 1
+      explanation: "`--from=build` là lấy từ stage đặt tên `AS build`, không phải từ build context."
+    - id: q3
+      type: single
+      prompt: "Khác nhau giữa `RUN` và `CMD`?"
+      options:
+        - "RUN chạy lúc build và lưu kết quả vào layer; CMD là lệnh mặc định chạy khi container khởi động"
+        - "Hai lệnh giống nhau"
+        - "CMD chạy lúc build; RUN chạy khi container khởi động"
+      answer: 0
+      explanation: "`go build` cần chạy một lần lúc build (RUN); chương trình cần chạy mỗi khi container chạy (CMD)."
+    - id: q4
+      type: multiple
+      prompt: "Image nhỏ (multi-stage) có những lợi ích nào?"
+      options:
+        - "Tải về và deploy nhanh hơn"
+        - "Ít phần mềm thừa, ít lỗ hổng phải vá"
+        - "Chương trình tự chạy nhanh hơn gấp 17 lần"
+      answer: [0, 1]
+      explanation: "Chương trình chạy như nhau; cái nhỏ đi là phần đồ nghề build bị bỏ lại."
+    - id: q5
+      type: single
+      prompt: "Dự án có `.env` chứa mật khẩu, Dockerfile dùng `COPY . .`, KHÔNG có `.dockerignore`. Chuyện gì xảy ra?"
+      options:
+        - "Docker tự bỏ qua file .env"
+        - "File .env bị chép vào image; ai có image là đọc được mật khẩu"
+        - "Build báo lỗi"
+      answer: 1
+      explanation: "Docker không tự bỏ file nào. Cần liệt kê `.env` trong `.dockerignore`."
+    - id: q6
+      type: single
+      prompt: "Bạn đã lỡ build image có `.env` và push lên registry public, rồi xóa image đó. Việc quan trọng nhất cần làm?"
+      options:
+        - "Không cần làm gì vì đã xóa image"
+        - "Đổi mật khẩu trong .env, coi như nó đã lộ"
+        - "Build lại với tag latest"
+      answer: 1
+      explanation: "Ai đó có thể đã pull image trước khi bạn xóa. Mật khẩu đã lộ thì phải đổi."
+    - id: q7
+      type: single
+      prompt: "Trong Dockerfile, thứ tự nào đúng?"
+      options:
+        - "USER app → RUN adduser -D -u 10001 app"
+        - "RUN adduser -D -u 10001 app → USER app"
+      answer: 1
+      explanation: "Tạo user (cần quyền root) trước, rồi mới chuyển sang user đó."
+    - id: q8
+      type: short_text
+      prompt: "Gõ lệnh Linux in ra tên user đang chạy (dùng sau `docker exec hello`)."
+      answer: ["whoami"]
+      explanation: "`whoami` = who am I. Image multi-stage của bài in ra `app`."

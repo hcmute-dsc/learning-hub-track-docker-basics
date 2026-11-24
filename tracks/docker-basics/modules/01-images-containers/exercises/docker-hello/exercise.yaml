@@ -1,0 +1,16 @@
+uid: 76edc174-5018-453d-bdc5-8b8809f1c252
+slug: docker-hello
+title: "Cài Docker và chạy container đầu tiên"
+type: self_check
+difficulty: easy
+lesson: first-container
+estimatedMinutes: 45
+authors: [github:TienNHM]
+spec:
+  checklist:
+    - "Đã cài Docker (Docker Desktop, Docker Engine hoặc Codespaces) theo tab Cài đặt"
+    - "docker run --rm hello-world in ra dòng Hello from Docker!"
+    - "Đã gửi ảnh chụp kết quả hello-world vào kênh Discord của track (hoặc nhắn riêng mentor)"
+    - "Đã chạy nginx:1.30-alpine với -d --name web -p 8080:80 và mở được http://localhost:8080"
+    - "Đã chạy thêm container web2 với -p 8081:80, thấy hai dòng trong docker ps, rồi xóa web2"
+    - "Giải thích được bằng lời của mình: vì sao -p 80:8080 không mở được trang"

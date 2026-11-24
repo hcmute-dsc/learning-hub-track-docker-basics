@@ -1,0 +1,66 @@
+uid: 4d99e0a3-7f02-4bd8-adc6-11703268c344
+slug: compose-quiz
+title: "Kiểm tra: Docker Compose"
+type: quiz
+difficulty: medium
+lesson: umami-postgres
+estimatedMinutes: 15
+authors: [github:TienNHM]
+spec:
+  passScore: 0.75
+  questions:
+    - id: q1
+      type: multiple
+      prompt: "Khi chạy `docker compose up`, Compose tự làm những việc nào thay bạn?"
+      options:
+        - "Tạo một network chung cho các service"
+        - "Dùng tên service làm tên máy trong network đó"
+        - "Tạo các named volume được khai báo"
+        - "Viết Dockerfile cho bạn"
+      answer: [0, 1, 2]
+      explanation: "Compose làm thay các lệnh network, volume, run của chương 1–4. Dockerfile vẫn do bạn viết."
+    - id: q2
+      type: single
+      prompt: "Trong `DATABASE_URL` của Umami, phần máy (host) của database nên là gì?"
+      options: ["localhost", "db", "my-site-db-1:3000"]
+      answer: 1
+      explanation: "Tên service `db` là tên máy trong network Compose tạo. `localhost` trong container umami là chính nó."
+    - id: q3
+      type: single
+      prompt: "`depends_on: [db]` (dạng ngắn) làm Umami chờ tới khi nào?"
+      options:
+        - "Tới khi Postgres nhận kết nối"
+        - "Tới khi container db bắt đầu chạy; Postgres có thể chưa sẵn sàng"
+        - "Không chờ gì cả"
+      answer: 1
+      explanation: "Muốn chờ Postgres thật sự sẵn sàng thì cần healthcheck và `condition: service_healthy` (chương 6)."
+    - id: q4
+      type: single
+      prompt: "`restart: on-failure` làm gì?"
+      options:
+        - "Khởi động lại container khi nó thoát vì lỗi"
+        - "Khởi động lại máy tính khi Docker lỗi"
+        - "Xóa container khi nó lỗi"
+      answer: 0
+      explanation: "Đó là một restart policy. Nó giúp Umami thử lại khi database chưa sẵn sàng."
+    - id: q5
+      type: single
+      prompt: "Lệnh nào xóa container nhưng GIỮ dữ liệu Postgres trong named volume?"
+      options: ["docker compose down", "docker compose down -v"]
+      answer: 0
+      explanation: "`-v` xóa cả volume, mất dữ liệu."
+    - id: q6
+      type: single
+      prompt: "Bạn sửa `site/index.html` rồi chạy `docker compose up -d`, trang không đổi. Thiếu gì?"
+      options: ["--build", "-v", "--name"]
+      answer: 0
+      explanation: "Không có `--build`, Compose dùng lại image đã build lần trước."
+    - id: q7
+      type: single
+      prompt: "Vì sao service `db` không có `ports`?"
+      options:
+        - "Vì Postgres không có cổng"
+        - "Vì chỉ Umami cần gọi nó, qua network nội bộ; không mở database ra máy khi không cần"
+        - "Vì Compose cấm mở cổng database"
+      answer: 1
+      explanation: "Giữa các service cùng network cổng thông sẵn. Ít cổng mở thì an toàn hơn."
