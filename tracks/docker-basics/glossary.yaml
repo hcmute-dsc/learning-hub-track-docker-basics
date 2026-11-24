@@ -41,6 +41,11 @@
   meaning: Một máy tính giả lập hoàn chỉnh, có hệ điều hành và kernel riêng. Nặng hơn container nhiều vì phải chạy cả một hệ điều hành.
   see: [container, kernel]
 
+- term: hypervisor
+  literal: trình giám sát (máy ảo)
+  meaning: Phần mềm tạo và chạy các máy ảo, chia CPU, RAM, ổ đĩa của máy thật cho chúng. Ví dụ VirtualBox, VMware, Hyper-V.
+  see: [virtual machine]
+
 - term: kernel
   literal: nhân, lõi
   meaning: Phần lõi của hệ điều hành, quản lý CPU, bộ nhớ, file và mạng. Mọi container trên một máy dùng chung kernel Linux của máy đó.
@@ -58,7 +63,7 @@
   see: [Docker Desktop]
 
 - term: daemon
-  literal: con quỷ nhỏ (chương trình chạy ngầm)
+  literal: tiến trình chạy ngầm (trợ thủ vô hình)
   meaning: Chương trình chạy nền của Docker, làm mọi việc thật sự như tải image, tạo container. Lệnh docker chỉ gửi yêu cầu tới daemon.
   see: [Docker Desktop]
 
@@ -75,9 +80,8 @@
   see: [container, detached]
 
 - term: detached
-  expansion: cờ -d
   literal: tách ra
-  meaning: Chạy container ở chế độ nền, trả lại terminal cho bạn ngay.
+  meaning: Chạy container ở chế độ nền, trả lại terminal cho bạn ngay. Bật bằng cờ -d.
   example: docker run -d nginx:1.30-alpine
   see: [docker run, logs]
 
@@ -87,9 +91,8 @@
   see: [publish]
 
 - term: publish
-  expansion: cờ -p
   literal: công bố, mở ra
-  meaning: Nối một cổng trên máy bạn với một cổng trong container, theo dạng cổng-máy-bạn:cổng-trong-container.
+  meaning: Cờ -p. Nối một cổng trên máy bạn với một cổng trong container, theo dạng cổng-máy-bạn:cổng-trong-container.
   example: docker run -p 8080:80 nginx:1.30-alpine
   see: [port]
 
@@ -99,6 +102,11 @@
   meaning: Liệt kê container đang chạy. Thêm -a (all) để thấy cả container đã dừng.
   example: docker ps -a
   see: [container]
+
+- term: reverse proxy
+  literal: proxy ngược (người gác cổng đứng trước)
+  meaning: Chương trình đứng trước các ứng dụng, nhận mọi yêu cầu từ ngoài vào rồi chuyển tới đúng ứng dụng bên trong. Nhờ vậy chỉ cần mở một cổng ra internet. nginx và Caddy hay được dùng làm reverse proxy.
+  see: [publish]
 
 - term: logs
   literal: nhật ký
@@ -114,16 +122,14 @@
   see: [interactive]
 
 - term: interactive
-  expansion: cờ -it (interactive + tty)
   literal: tương tác
-  meaning: Giữ bàn phím và màn hình nối với lệnh trong container, để gõ lệnh như đang ngồi trong máy đó.
+  meaning: Cờ -i, thường đi cùng -t (tty, cấp màn hình terminal) thành -it. Giữ bàn phím và màn hình nối với lệnh trong container, để gõ lệnh như đang ngồi trong máy đó.
   example: docker exec -it web sh
   see: [exec]
 
 - term: environment variable
-  expansion: cờ -e
   literal: biến môi trường
-  meaning: Cặp TÊN=giá trị đưa vào tiến trình lúc chạy. Nhiều image đọc cấu hình, như mật khẩu, từ biến môi trường.
+  meaning: Cặp TÊN=giá trị đưa vào tiến trình lúc chạy, đặt bằng cờ -e. Nhiều image đọc cấu hình, như mật khẩu, từ biến môi trường.
   example: docker run -e POSTGRES_PASSWORD=matkhau postgres:18-alpine
   see: [.env]
 
@@ -192,8 +198,14 @@
 
 - term: writable layer
   literal: lớp ghi được
-  meaning: Lớp mỏng riêng của mỗi container, nằm trên các layer chỉ đọc của image. Mọi file container tạo hay sửa nằm ở đây và mất khi container bị xóa.
+  meaning: Lớp mỏng riêng của mỗi container, nằm trên các layer chỉ đọc của image. File container tạo hay sửa nằm ở đây (trừ thư mục được gắn volume) và mất khi container bị xóa.
   see: [layer, volume]
+
+- term: history
+  literal: lịch sử
+  meaning: Lệnh liệt kê các bước đã tạo ra một image, mỗi dòng một layer, kèm dung lượng của layer đó.
+  example: docker history my-site:dev
+  see: [layer]
 
 - term: cache
   literal: bộ nhớ đệm
@@ -295,7 +307,13 @@
   literal: ổ chứa (như một ổ đĩa)
   meaning: Vùng lưu trữ do Docker quản lý, nằm NGOÀI container. Gắn vào container thì dữ liệu còn lại khi container bị xóa.
   example: docker volume ls
-  see: [named volume, mount, writable layer]
+  see: [named volume, anonymous volume, mount, writable layer]
+
+- term: anonymous volume
+  literal: volume vô danh
+  meaning: Volume Docker tự tạo, tên là một chuỗi mã ngẫu nhiên, khi image khai báo VOLUME mà bạn không gắn volume nào. Mỗi container mới nhận một cái mới, trống; cái cũ bị bỏ rơi, chiếm ổ đĩa đến khi xóa.
+  example: docker rm -f -v db
+  see: [volume, named volume]
 
 - term: named volume
   literal: volume có tên
@@ -308,6 +326,11 @@
   meaning: Gắn một volume hay một thư mục vào một đường dẫn trong container. Ghi vào đường dẫn đó là ghi vào volume.
   example: -v pgdata:/var/lib/postgresql
   see: [volume, bind mount]
+
+- term: inspect
+  literal: xem xét kỹ
+  meaning: Lệnh in mọi chi tiết của một đối tượng Docker (container, image, volume, network) dạng JSON. Thêm --format để chỉ lấy một phần.
+  example: docker volume inspect pgdata
 
 - term: bind mount
   literal: gắn trói
@@ -428,6 +451,11 @@
   literal: khỏe mạnh
   meaning: Trạng thái của container khi healthcheck đã thành công. Các trạng thái khác là starting và unhealthy.
   see: [healthcheck]
+
+- term: which
+  literal: cái nào
+  meaning: Lệnh Linux in đường dẫn của một chương trình nếu nó có trên máy (hay trong container), không in gì nếu không có.
+  example: docker compose exec web which wget
 
 - term: start_period
   literal: thời gian khởi động

@@ -21,7 +21,7 @@ spec:
       weight: 15
     - criterion: "Bí mật: không có mật khẩu trong file được commit; .env trong .gitignore và .dockerignore; .env chưa từng có trong lịch sử Git; image không chứa .env"
       weight: 15
-    - criterion: "Registry: image tự build có trên GHCR, tag semver, public, pull và chạy được khi chưa đăng nhập"
+    - criterion: "Registry: image tự build có trên GHCR, tag semver không bị ghi đè, public, có bản linux/amd64, pull và chạy được khi chưa đăng nhập"
       weight: 10
     - criterion: "README: mô tả, sơ đồ service, cách chạy (kể cả tạo .env, lệnh PowerShell), cổng, chạy từ GHCR, mục gỡ lỗi"
       weight: 10

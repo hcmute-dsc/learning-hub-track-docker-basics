@@ -13,4 +13,5 @@ spec:
     - "Đã chạy psql -h db từ một container khác trên network lab và đếm được 1 dòng"
     - "Đã thấy container ngoài network lab không tìm thấy tên db"
     - "Đã thử bind mount thư mục site/ với nginx, sửa file và thấy trang đổi ngay"
+    - "Đã tìm thấy volume vô danh bằng docker volume ls và xóa nó bằng docker rm -v hoặc docker volume rm"
     - "Đã dọn container, network lab và volume pgdata"

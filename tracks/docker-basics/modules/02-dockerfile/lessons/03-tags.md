@@ -60,10 +60,10 @@ Không ghi tag thì Docker tự hiểu là `latest` (*mới nhất*): `docker ru
 Nhiều người tưởng `latest` luôn là bản mới nhất. Thật ra `latest` **chỉ là một tag như mọi tag khác**:
 
 - Nó không tự cập nhật trên máy bạn. Bạn pull `nginx:latest` tháng trước thì máy bạn vẫn giữ bản tháng trước.
-- Trên registry, người làm image có thể dán nó sang bản mới bất cứ lúc nào. Hôm nay `latest` là 1.30, tháng sau có thể là 1.31 với thay đổi làm hỏng cấu hình của bạn.
+- Trên registry, người làm image có thể dán nó sang bản khác bất cứ lúc nào, và chưa chắc là bản bạn nghĩ. Ví dụ với nginx: `latest` đi theo nhánh **mainline** (bản thử nghiệm tính năng mới, lúc viết bài là 1.31.x), còn `1.30` là nhánh **stable** (ổn định). Chạy `nginx` không tag là bạn đang dùng bản khác hẳn với `nginx:1.30-alpine` trong bài, và nó đổi theo mỗi bản mainline mới.
 - Nhìn chữ `latest` không biết đang chạy phiên bản nào.
 
-Vì vậy, quy tắc của track: **luôn ghi tag cụ thể cho image nền**, như `nginx:1.30-alpine`, `postgres:18-alpine`. Hôm nay build được thì tháng sau build vẫn ra cùng kết quả.
+Vì vậy, quy tắc của track: **luôn ghi tag cụ thể cho image nền**, như `nginx:1.30-alpine`, `postgres:18-alpine`. Hôm nay build được thì tháng sau build vẫn ra **gần như cùng kết quả**: người làm image vẫn có thể dời tag `1.30-alpine` sang một bản vá nhỏ (sửa lỗi bảo mật, ví dụ 1.30.0 thành 1.30.1), nhưng không nhảy sang phiên bản lớn. Muốn giống **tuyệt đối** thì ghim bằng *digest*, chương 7 bài 2 mục 3.
 
 ## 3. Quy ước tag hay gặp
 

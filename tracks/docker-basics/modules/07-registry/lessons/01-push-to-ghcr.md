@@ -50,12 +50,14 @@ registry namespace  tên    tag
 - `1.0.0`: tag (chương 2).
 - **Chỉ dùng chữ thường.** Tên GitHub `An-Nguyen` thì viết `an-nguyen`, nếu không Docker báo `repository name must be lowercase`.
 
-Dán nhãn đầy đủ cho image có sẵn (chương 2: `tag` không tạo bản sao):
+Image `my-site:dev` trên máy có thể đã cũ (build từ chương 2, trước khi bạn sửa trang hay thêm `.dockerignore`). Vì vậy build lại ngay với tên đầy đủ, đứng trong thư mục `my-site`:
 
 ```bash
-docker tag my-site:dev ghcr.io/ten-ban/my-site:1.0.0
+docker build -t ghcr.io/ten-ban/my-site:1.0.0 .
 docker image ls ghcr.io/ten-ban/my-site
 ```
+
+**Đọc hiểu:** giống `docker build` của chương 2, chỉ khác tên image. Image mới phản ánh đúng code hiện tại. (Muốn gắn tên đầy đủ cho một image đã build sẵn thì dùng `docker tag`, chương 2: `tag` không tạo bản sao.)
 
 ## 2. Vì sao cần token, không dùng mật khẩu
 
@@ -99,6 +101,7 @@ Login Succeeded
 - `-u` = *username*: tên GitHub của bạn.
 - Gõ token qua dấu nhắc `Password:` để token **không nằm trong lịch sử lệnh** của terminal. Đừng dùng `-p <token>` trên dòng lệnh: lịch sử lệnh lưu lại nó.
 - Docker Desktop cất thông tin đăng nhập vào kho mật khẩu của hệ điều hành (Windows Credential Manager, macOS Keychain).
+- Trên Linux dùng Docker Engine, hay trong Codespaces, thường **không có** kho mật khẩu đó: Docker ghi token vào file `~/.docker/config.json`, chỉ mã hóa base64 (đổi dạng, **không phải** mã hóa bảo mật), và in cảnh báo `Your password will be stored unencrypted`. Ai đọc được file đó là có token. Trên máy dùng chung (phòng lab, máy bạn bè), **luôn chạy `docker logout ghcr.io`** khi xong việc: lệnh này xóa token khỏi máy.
 
 ## 5. Push
 
@@ -106,7 +109,9 @@ Login Succeeded
 docker push ghcr.io/ten-ban/my-site:1.0.0
 ```
 
-**Đọc hiểu:** `push` (*đẩy*) tải image lên registry. Output có các dòng `Pushed` cho từng layer, và nhiều dòng `Mounted from library/nginx` hoặc `Layer already exists`: registry đã có layer nền nginx nên không tải lại, đúng như chương 2 nói về layer dùng chung. Dòng cuối có `digest: sha256:…` (bài sau giải thích).
+**Đọc hiểu:** `push` (*đẩy*) tải image lên registry, **từng layer một** (chương 2). Lần push đầu tiên lên GHCR, mọi layer đều hiện `Pushed`, kể cả các layer nền của nginx: GHCR là registry khác Docker Hub, nó chưa có layer nào của bạn. Lần push sau (bản `1.0.1`, hay thêm tag `latest`), các layer không đổi hiện `Layer already exists` và không tải lại; chỉ layer `COPY site/` mới được tải. Đó là lợi ích của layer dùng chung. Dòng cuối có `digest: sha256:…` (bài sau giải thích).
+
+Dùng Mac chip Apple (M1, M2…)? Image bạn build ra là bản **arm64**, máy amd64 của mentor sẽ không chạy được. Bài sau, mục 5, chỉ cách build cho cả hai loại máy.
 
 ## 6. Xem và đổi visibility
 
@@ -158,7 +163,7 @@ Khi rời một dự án hay đổi máy, người cẩn thận thu hồi các P
 | `unauthorized` / `denied` khi login | Dán sai, dán mật khẩu GitHub, hoặc token hết hạn | Tạo token mới, dán lại |
 | `denied: permission_denied: The token provided does not match expected scopes` | Token thiếu `write:packages` | Tạo token mới đúng quyền |
 | `denied: requested access to the resource is denied` khi push | Push vào namespace không phải của bạn, hoặc tên thiếu `ghcr.io/` | Kiểm tra namespace là tên GitHub của bạn |
-| `An image does not exist locally with the tag` | Chưa `docker tag` tên đầy đủ | `docker tag my-site:dev ghcr.io/ten-ban/my-site:1.0.0` |
+| `An image does not exist locally with the tag` | Chưa build hoặc tag image với tên đầy đủ | `docker build -t ghcr.io/ten-ban/my-site:1.0.0 .` |
 | Lỗi khác, hoặc chưa hiểu vì sao | | Nhắn mentor, công khai hay **nhắn riêng** đều được (tab **Cài đặt** → "Hỏi ở đâu"). **Che token** trước khi gửi |
 
 ## Tóm tắt

@@ -19,11 +19,11 @@ spec:
       type: single
       prompt: "Trong `compose.yaml`, `${POSTGRES_PASSWORD}` lấy giá trị từ đâu?"
       options:
-        - "Từ file .env cạnh compose.yaml, Compose tự đọc và thay chữ trước khi chạy"
+        - "Từ biến môi trường đặt trong terminal nếu có (ưu tiên), nếu không thì từ file .env cạnh compose.yaml; Compose thay chữ trước khi chạy"
         - "Từ khóa env_file của service"
         - "Từ Dockerfile"
       answer: 0
-      explanation: "Thay `${...}` dùng file `.env` của project. `env_file` là cơ chế khác: đưa biến vào bên trong container."
+      explanation: "Thay `${...}` dùng biến của terminal trước, rồi tới file `.env` của project. `env_file` là cơ chế khác: đưa biến vào bên trong container."
     - id: q3
       type: single
       prompt: "`ports: - \"${WEB_PORT:-8080}:80\"` và file `.env` KHÔNG có dòng WEB_PORT. Trang mở ở cổng nào trên máy bạn?"

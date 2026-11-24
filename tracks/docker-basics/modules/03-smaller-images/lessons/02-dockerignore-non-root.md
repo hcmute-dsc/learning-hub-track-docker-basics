@@ -39,7 +39,7 @@ echo "DB_PASSWORD=bi-mat" > .env
 echo "# Ghi chú" > NOTES.md
 ```
 
-**Đọc hiểu:** `echo "…" > tên-file` ghi một dòng chữ vào file (tạo mới nếu chưa có). Lệnh này chạy được cả trên PowerShell lẫn bash. `.env` giả làm file mật khẩu (chương 6 dùng thật).
+**Đọc hiểu:** `echo "…" > tên-file` ghi một dòng chữ vào file (tạo mới nếu chưa có). `.env` giả làm file mật khẩu (chương 6 dùng thật). Ở bài này lệnh chạy được cả trên PowerShell lẫn bash, vì ta chỉ cần file **có mặt**. Nhưng Windows PowerShell 5.1 ghi file theo mã hóa UTF-16, nên với file `.env` mà Compose phải **đọc** (chương 6), hãy tạo bằng VS Code thay vì `echo`.
 
 `Dockerfile.single` ở bài trước dùng `COPY . .`. Build lại rồi xem trong image có gì:
 
@@ -63,14 +63,14 @@ main.go
 
 ## 3. .dockerignore
 
-**`.dockerignore`** (*danh sách Docker bỏ qua*) là file đặt cạnh `Dockerfile`, liệt kê những gì **không** đưa vào build context. Cú pháp giống `.gitignore`: mỗi dòng một mẫu tên.
+**`.dockerignore`** (*danh sách Docker bỏ qua*) là file đặt cạnh `Dockerfile`, liệt kê những gì **không** đưa vào build context. Cú pháp **gần giống** `.gitignore`: mỗi dòng một mẫu tên. Khác một điểm quan trọng: mẫu trong `.dockerignore` tính **từ gốc build context**. `.env` chỉ bỏ file `.env` ở thư mục gốc, còn `sub/.env` vẫn lọt vào; trong `.gitignore` thì `.env` bỏ ở mọi cấp. Muốn bỏ ở mọi thư mục con, viết `**/` phía trước (`**` nghĩa là "bất kỳ bao nhiêu thư mục", kể cả không có).
 
 Tạo `hello-go/.dockerignore`:
 
 ```text
 .git
-.env
-*.md
+**/.env
+**/*.md
 Dockerfile*
 .dockerignore
 ```
@@ -80,8 +80,8 @@ Dockerfile*
 | Dòng | Bỏ qua | Vì sao |
 | --- | --- | --- |
 | `.git` | lịch sử Git | to, và có thể chứa mật khẩu từng lỡ commit |
-| `.env` | file mật khẩu | **không bao giờ** được vào image |
-| `*.md` | mọi file đuôi `.md` (README, ghi chú) | không cần để chạy. `*` nghĩa là "bất kỳ chuỗi nào" |
+| `**/.env` | file `.env` ở **mọi** thư mục | file mật khẩu **không bao giờ** được vào image |
+| `**/*.md` | mọi file đuôi `.md` ở mọi thư mục (README, ghi chú) | không cần để chạy. `*` nghĩa là "bất kỳ chuỗi nào" |
 | `Dockerfile*` | `Dockerfile`, `Dockerfile.single` | không cần trong image |
 | `.dockerignore` | chính nó | không cần trong image |
 

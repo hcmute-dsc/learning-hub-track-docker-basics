@@ -14,7 +14,7 @@ spec:
       prompt: "Chạy Postgres KHÔNG có volume, tạo bảng, rồi `docker rm -f db` và chạy lại. Bảng còn không?"
       options: ["Còn", "Mất"]
       answer: 1
-      explanation: "Dữ liệu nằm trong lớp ghi của container và bị xóa cùng container."
+      explanation: "Container mới không thấy dữ liệu cũ. Vì image postgres khai báo VOLUME, mỗi container được Docker tạo một volume vô danh mới, trống; volume cũ có bảng notes bị bỏ rơi. Chỉ named volume mới cho container sau dùng lại."
     - id: q2
       type: single
       prompt: "Với `postgres:18-alpine`, gắn named volume vào đâu để giữ dữ liệu?"

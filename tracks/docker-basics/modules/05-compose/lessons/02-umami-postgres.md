@@ -146,19 +146,21 @@ umami-1  | Applying migration `01_init`
 ```mermaid
 sequenceDiagram
   participant C as Compose
+  participant K as Docker daemon
   participant D as db (Postgres)
   participant U as umami
-  C->>D: khởi động container db
-  C->>U: khởi động umami ngay (depends_on chỉ chờ container chạy)
+  C->>K: tạo và chạy db, rồi umami (depends_on chỉ chờ container chạy)
+  K->>D: khởi động container db
+  K->>U: khởi động umami ngay
   U->>D: kết nối db:5432
   D-->>U: chưa sẵn sàng, lỗi
-  U->>U: thoát (Exited 1)
-  C->>U: restart: on-failure, chạy lại
+  U->>K: thoát (Exited 1)
+  K->>U: restart: on-failure, chạy lại
   U->>D: kết nối lần nữa
   D-->>U: OK
 ```
 
-`restart: on-failure` cứu ta ở đây: Umami thoát vì lỗi thì Docker chạy lại nó. Cách này **chạy được, nhưng chưa đẹp**: log đầy lỗi, và nếu database hỏng thật thì Umami cứ lặp mãi. Chương 6 dùng `healthcheck` để Umami **chờ đúng lúc** Postgres sẵn sàng.
+`restart: on-failure` cứu ta ở đây: Umami thoát vì lỗi thì **Docker daemon** (chương 1), không phải Compose, chạy lại nó. Compose chỉ ghi chính sách đó vào container lúc tạo; sau đó daemon tự canh, kể cả khi bạn đã tắt terminal. Cách này **chạy được, nhưng chưa đẹp**: log đầy lỗi, và nếu database hỏng thật thì Umami cứ lặp mãi. Chương 6 dùng `healthcheck` để Umami **chờ đúng lúc** Postgres sẵn sàng.
 
 ## 5. Gọi nhau bằng tên service
 

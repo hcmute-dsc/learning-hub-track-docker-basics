@@ -19,7 +19,7 @@ terms: [pull request, code review]
 
 ## 1. Pull request trong 5 dòng
 
-**Pull request** (PR, *yêu cầu gộp thay đổi*) là đề nghị gộp các commit từ một nhánh vào nhánh khác trên GitHub. Nó tạo ra một trang để người khác đọc thay đổi, chạy thử, và bình luận từng dòng. Bạn đã gặp PR ở track Git & GitHub; ở đây chỉ cần ba lệnh:
+**Pull request** (PR, *yêu cầu gộp thay đổi*) là đề nghị gộp các commit từ một nhánh vào nhánh khác trên GitHub. Nó tạo ra một trang để người khác đọc thay đổi, chạy thử, và bình luận từng dòng. Bạn đã gặp PR ở track Git & GitHub; ở đây chỉ cần hai lệnh Git (cộng các lệnh `git add`, `git commit` quen thuộc ở giữa):
 
 ```bash
 git switch -c final-project

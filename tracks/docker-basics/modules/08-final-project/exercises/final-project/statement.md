@@ -10,7 +10,7 @@
 - bí mật trong `.env` ngoài Git, có `.env.example`;
 - healthcheck cho mọi service, `depends_on` với `condition: service_healthy`;
 - mọi image có tag cụ thể;
-- image tự build có trên GHCR, tag semver, package public;
+- image tự build có trên GHCR, tag semver, package public, có bản `linux/amd64` (dùng Mac chip Apple thì build multi-platform, chương 7);
 - README đủ 7 mục.
 
 ## Nộp bài
@@ -37,6 +37,6 @@ Mentor clone repo, làm đúng theo README, rồi chấm theo rubric 100 điểm
 | Dockerfile | 20 | Multi-stage khi cần, user không phải root, `.dockerignore`, tag cụ thể |
 | Compose | 15 | Healthcheck, `service_healthy`, named volume, database không mở cổng |
 | Bí mật | 15 | Không có bí mật trong Git, lịch sử, hay image |
-| Registry | 10 | Image public trên GHCR, tag semver, pull được khi chưa đăng nhập |
+| Registry | 10 | Image public trên GHCR, tag semver, có bản `linux/amd64`, pull được khi chưa đăng nhập |
 | README | 10 | Người lạ làm theo được, có sơ đồ và mục gỡ lỗi |
 | Quy trình nhóm | 5 | Nộp bằng PR, có review của bạn khác, đã phản hồi |

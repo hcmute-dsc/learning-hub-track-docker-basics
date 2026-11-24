@@ -13,6 +13,6 @@ spec:
     - "Đã build hello-go:single và hello-go:multi, ghi lại kích thước của cả hai từ docker image ls"
     - "curl tới http://localhost:8080 trả lời câu Xin chào từ Go với user app"
     - "Đã thấy .env nằm trong /src của image khi chưa có .dockerignore, và biến mất khi đã có"
-    - "docker exec … whoami in app với image multi, root với image single"
+    - "docker exec hello whoami in app (image multi), docker run --rm hello-go:single whoami in root"
     - "Đã thêm .dockerignore (ít nhất .git và .env) vào repo trang web của bài dự án chương 2"
     - "Đã xóa các container thử nghiệm bằng docker rm -f"

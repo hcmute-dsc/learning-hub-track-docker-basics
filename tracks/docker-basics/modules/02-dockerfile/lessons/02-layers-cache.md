@@ -10,7 +10,7 @@ objectives:
 prerequisites:
   - docker-basics/dockerfile/first-dockerfile
 authors: [github:TienNHM]
-terms: [layer, writable layer, cache, RUN, WORKDIR]
+terms: [layer, writable layer, history, cache, RUN, WORKDIR]
 ---
 
 # Layer và cache: vì sao build lần hai nhanh
@@ -47,7 +47,7 @@ flowchart TB
 
 **Đọc hiểu sơ đồ:** hai container từ cùng một image **dùng chung** các layer chỉ đọc, chỉ có lớp ghi là riêng. Vì vậy chạy 10 container từ một image không tốn gấp 10 lần ổ đĩa. Và vì vậy `docker exec` sửa file trong container không làm đổi image (chương 1).
 
-Xem các layer của image bằng `history` (*lịch sử*):
+Xem các layer của image bằng lệnh history (*lịch sử*): nó liệt kê lịch sử các bước đã tạo ra image, mỗi bước một layer.
 
 ```bash
 docker history my-site:dev

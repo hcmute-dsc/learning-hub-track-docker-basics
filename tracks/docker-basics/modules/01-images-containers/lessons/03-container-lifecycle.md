@@ -109,7 +109,7 @@ Nhiều image đọc cấu hình từ **biến môi trường** (*environment va
 Thử với `alpine`, một image Linux tối giản:
 
 ```bash
-docker run --rm -e TEN=An alpine:3.22 sh -c 'echo "Xin chao $TEN"'
+docker run --rm -e TEN=An alpine:3.22 sh -c 'echo Xin chao $TEN'
 ```
 
 ```text
@@ -122,6 +122,7 @@ Xin chao An
 - `-e TEN=An`: đặt biến môi trường `TEN` có giá trị `An` bên trong container.
 - `alpine:3.22`: image. Mọi thứ **sau** tên image là lệnh chạy trong container.
 - `sh -c '...'`: nhờ shell chạy câu lệnh trong dấu nháy. `$TEN` được thay bằng `An` **bên trong** container.
+- Vì sao không viết `echo "Xin chao $TEN"` (có nháy kép bên trong)? Windows PowerShell 5.1 làm rơi dấu nháy kép nằm trong chuỗi khi gửi cho chương trình khác, và bạn chỉ thấy `Xin`. Trong track này, lệnh nào chạy qua `sh -c` đều tránh nháy kép lồng trong nháy đơn.
 
 Đổi `-e TEN=Binh` và chạy lại: kết quả đổi, image vẫn là một. Đó là cách một image dùng được ở nhiều nơi với cấu hình khác nhau.
 

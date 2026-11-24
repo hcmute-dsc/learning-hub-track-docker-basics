@@ -63,5 +63,5 @@ spec:
     - id: q8
       type: short_text
       prompt: "Bạn chạy container mới với `-p 8080:80` và gặp lỗi `port is already allocated`. Gõ lệnh liệt kê các container đang chạy để tìm container đang giữ cổng."
-      answer: ["docker ps", "docker container ls", "docker container ps"]
-      explanation: "`docker ps` có cột PORTS cho biết container nào đang dùng cổng 8080."
+      answer: ["docker ps", "docker ps -a", "docker container ls", "docker container ps"]
+      explanation: "`docker ps` có cột PORTS cho biết container nào đang dùng cổng 8080. `docker ps -a` cũng được, nó hiện thêm cả container đã dừng."

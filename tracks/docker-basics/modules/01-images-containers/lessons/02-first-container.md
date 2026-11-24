@@ -10,7 +10,7 @@ objectives:
 prerequisites:
   - docker-basics/images-containers/why-docker
 authors: [github:TienNHM]
-terms: [pull, docker run, detached, port, publish, ps]
+terms: [pull, docker run, detached, port, publish, ps, reverse proxy]
 ---
 
 # Chạy container đầu tiên và mở cổng
@@ -124,13 +124,13 @@ docker rm -f web2
 | Sai lầm | Hậu quả | Đúng |
 | --- | --- | --- |
 | Đảo thứ tự `-p 80:8080` | Trang không mở được dù `docker ps` thấy container chạy | Cổng **máy bạn** bên trái, cổng **container** bên phải |
-| Đặt cờ sau tên image: `docker run nginx:1.30-alpine -d` | `-d` bị coi là lệnh chạy **bên trong** container, lỗi | Mọi cờ đứng **trước** tên image |
+| Đặt cờ sau tên image: `docker run nginx:1.30-alpine -d` | `-d` bị coi là lệnh chạy **bên trong** container: chạy ở chế độ thường (không nền) và báo `/docker-entrypoint.sh: exec: line 47: illegal option -d`, rồi container thoát, nằm lại trong `docker ps -a` | Mọi cờ đứng **trước** tên image; dọn container lỗi bằng `docker ps -a` rồi `docker rm <tên>` |
 | Nghĩ `EXPOSE` hay "image có cổng 80" là đủ | Không truy cập được từ máy | Luôn cần `-p` để mở ra máy bạn |
 | Chạy lại cùng lệnh lần hai | Lỗi trùng tên hoặc trùng cổng | Mỗi `run` tạo container **mới**; container cũ vẫn còn (bài sau) |
 
 ## 7. Ngoài thực tế
 
-Trên máy chủ thật, người ta hiếm khi mở thẳng cổng của từng container ra internet. Thường chỉ **một** container (một "reverse proxy" như nginx hay Caddy) được `-p 80:80` và `-p 443:443`; nó nhận mọi yêu cầu rồi chuyển vào các container ứng dụng qua mạng nội bộ (chương 4). Database **không bao giờ** được mở cổng ra ngoài. Ít cổng mở thì ít chỗ bị tấn công.
+Trên máy chủ thật, người ta hiếm khi mở thẳng cổng của từng container ra internet. Thường chỉ **một** container được `-p 80:80` và `-p 443:443`: một **reverse proxy** (*proxy ngược*, người gác cổng đứng trước các ứng dụng) như nginx hay Caddy. Nó nhận mọi yêu cầu từ internet, xem yêu cầu muốn tới ứng dụng nào, rồi chuyển vào đúng container ứng dụng qua mạng nội bộ (chương 4). Database **không bao giờ** được mở cổng ra ngoài. Ít cổng mở thì ít chỗ bị tấn công.
 
 Khi làm nhóm trên máy cá nhân, nhóm thống nhất bảng cổng (web 8080, API 3000, database không mở) và ghi vào README, để ai chạy cũng giống nhau và không giẫm cổng của nhau.
 

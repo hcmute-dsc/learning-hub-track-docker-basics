@@ -127,7 +127,40 @@ Nếu `pull` báo `denied` hoặc `unauthorized`: package vẫn **private** (bà
 
 ![Sơ đồ push và pull. Máy của bạn có image my-site:1.1.0, đăng nhập bằng PAT rồi docker push lên kho ghcr.io/ten-ban/my-site có các tag 1.0.0, 1.1.0, 1.1 và latest. Một máy khác như máy mentor hay máy chủ docker pull về rồi docker run thành container, không cần mã nguồn. Ghi chú: push luôn cần đăng nhập bằng token, pull package public thì không cần, token không bao giờ dán ra ngoài.](../../../assets/registry-push-pull.png)
 
-## 5. Sai lầm thường gặp
+## 5. Một image cho cả máy Intel/AMD và Mac chip Apple
+
+Máy tính dùng hai loại CPU phổ biến: **amd64** (đa số laptop Windows, máy chủ) và **arm64** (Mac chip Apple M1, M2…). Image build trên máy nào thì mặc định chỉ có bản cho **loại CPU của máy đó**. Bạn dùng Mac chip Apple, push `1.1.0`, mentor dùng Windows pull về sẽ gặp:
+
+```text
+no matching manifest for linux/amd64 in the manifest list entries
+```
+
+Cách sửa: build một image **nhiều nền tảng** (*multi-platform*), chứa cả hai bản, và đẩy thẳng lên registry:
+
+```bash
+docker buildx build --platform linux/amd64,linux/arm64 -t ghcr.io/ten-ban/my-site:1.1.0 --push .
+```
+
+**Đọc hiểu:**
+
+- `buildx` là bộ build mở rộng của Docker, có sẵn trong Docker Desktop. `docker build` thường ngày cũng chạy bằng nó.
+- `--platform linux/amd64,linux/arm64`: build hai bản. Bản không trùng CPU của máy bạn được build qua giả lập, nên chậm hơn vài lần.
+- `--push`: build xong đẩy thẳng lên registry (phải `docker login ghcr.io` trước). Registry lưu một "danh sách" trỏ tới cả hai bản; máy nào pull thì tự nhận đúng bản của mình.
+- Muốn thêm tag khác (`1.1`, `latest`), thêm nhiều `-t` trong cùng lệnh.
+
+Lệnh này cần Docker Desktop bật **containerd image store**: **Settings → General → Use containerd for pulling and storing images** (bản Docker Desktop mới bật sẵn). Nếu chưa bật, Docker báo `Multi-platform build is not supported for the docker driver`. Khi đó bật tùy chọn trên rồi khởi động lại Docker Desktop, hoặc tạo một builder riêng: `docker buildx create --name multi --driver docker-container --use`.
+
+Kiểm tra image trên registry có đủ hai bản:
+
+```bash
+docker buildx imagetools inspect ghcr.io/ten-ban/my-site:1.1.0
+```
+
+**Đọc hiểu:** kết quả liệt kê các `Platform:`, phải có cả `linux/amd64` và `linux/arm64`.
+
+Máy Windows hay Linux amd64 thì không bắt buộc làm bước này: mentor dùng Mac chip Apple vẫn chạy được image amd64 qua giả lập (tab **Cài đặt**, mục 4), chỉ chậm hơn.
+
+## 6. Sai lầm thường gặp
 
 | Sai lầm | Hậu quả | Đúng |
 | --- | --- | --- |
@@ -136,7 +169,7 @@ Nếu `pull` báo `denied` hoặc `unauthorized`: package vẫn **private** (bà
 | Máy chủ chạy `:latest` | Lần khởi động lại có thể ra bản khác, hỏng bất ngờ | Máy chủ dùng tag đầy đủ hoặc digest |
 | Nghĩ đã pull `latest` là có bản mới nhất | Máy giữ bản đã pull lần trước | `docker pull` lại để cập nhật |
 
-## 6. Ngoài thực tế
+## 7. Ngoài thực tế
 
 Quy trình phát hành phổ biến ở các nhóm:
 
@@ -148,13 +181,15 @@ Quy trình phát hành phổ biến ở các nhóm:
 
 Nhờ tag phiên bản không bao giờ bị ghi đè, câu hỏi "máy chủ đang chạy code nào?" luôn có câu trả lời chính xác.
 
-## 7. Khi bị lỗi
+## 8. Khi bị lỗi
 
 | Lỗi | Vì sao | Cách sửa |
 | --- | --- | --- |
 | `denied` / `unauthorized` khi pull | Package private, chưa đăng nhập | Đổi sang public, hoặc `docker login ghcr.io` |
 | `manifest unknown` / `not found` | Sai tag, hoặc chưa push tag đó | Xem tab Packages trên GitHub có những tag nào |
 | `no matching manifest for linux/arm64/v8` khi pull trên Mac chip Apple | Image build trên máy amd64 chỉ có bản amd64 | Thêm `--platform linux/amd64` khi `run` (tab **Cài đặt**, mục 4) |
+| `no matching manifest for linux/amd64` khi pull trên Windows/Linux | Image build trên Mac chip Apple chỉ có bản arm64 | Người push build lại bằng `docker buildx build --platform linux/amd64,linux/arm64 … --push .` (mục 5) |
+| `Multi-platform build is not supported for the docker driver` | Docker Desktop chưa bật containerd image store | Bật trong Settings → General, hoặc `docker buildx create --name multi --driver docker-container --use` (mục 5) |
 | `port is already allocated` | Container trang web cũ còn chạy | `docker ps`, `docker rm -f` |
 | Lỗi khác, hoặc chưa hiểu vì sao | | Nhắn mentor, công khai hay **nhắn riêng** đều được (tab **Cài đặt** → "Hỏi ở đâu"). **Che token** trước khi gửi |
 
@@ -164,3 +199,4 @@ Nhờ tag phiên bản không bao giờ bị ghi đè, câu hỏi "máy chủ đ
 - Một bản phát hành có thể có nhiều tag; tag phiên bản đầy đủ không bao giờ ghi đè.
 - Digest `sha256:…` là dấu vân tay không đổi của image; `@sha256:` ghim chặt.
 - Public package: máy nào cũng `docker pull` rồi `docker run` được, không cần mã nguồn.
+- Dùng Mac chip Apple thì build `--platform linux/amd64,linux/arm64` để máy amd64 cũng chạy được.

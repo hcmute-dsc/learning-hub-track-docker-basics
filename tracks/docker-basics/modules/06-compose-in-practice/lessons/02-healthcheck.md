@@ -10,7 +10,7 @@ objectives:
 prerequisites:
   - docker-basics/compose-in-practice/env-files
 authors: [github:TienNHM]
-terms: [healthcheck, healthy, start_period]
+terms: [healthcheck, healthy, start_period, which]
 ---
 
 # Healthcheck: chờ đúng lúc database sẵn sàng
@@ -30,7 +30,7 @@ Ví von: nhà hàng **mở cửa** (container chạy) không có nghĩa bếp đ
 
 ## 2. Healthcheck
 
-**Healthcheck** (*khám sức khỏe*) là một lệnh Docker chạy **định kỳ bên trong container** để hỏi ứng dụng "ổn chưa?". Lệnh trả về mã thoát `0` là ổn, khác `0` là chưa.
+**Healthcheck** (*khám sức khỏe*) là một lệnh mà **Docker daemon** (không phải Compose) chạy **định kỳ bên trong container** để hỏi ứng dụng "ổn chưa?". Compose chỉ đọc kết quả đó để quyết định khi nào khởi động service tiếp theo. Lệnh trả về mã thoát `0` là ổn, khác `0` là chưa.
 
 Kết quả làm container có thêm một trạng thái sức khỏe:
 
@@ -164,15 +164,20 @@ web       Up 21 seconds (healthy)
 ```mermaid
 sequenceDiagram
   participant C as Compose
+  participant K as Docker daemon
   participant D as db
   participant U as umami
-  C->>D: khởi động db
+  C->>K: khởi động db
+  K->>D: chạy container db
   loop mỗi 5 giây
-    C->>D: pg_isready?
-    D-->>C: chưa (starting)
+    K->>D: pg_isready?
+    D-->>K: chưa (starting)
   end
-  D-->>C: sẵn sàng (healthy)
-  C->>U: giờ mới khởi động umami
+  D-->>K: sẵn sàng (healthy)
+  C->>K: db healthy chưa?
+  K-->>C: healthy
+  C->>K: giờ mới khởi động umami
+  K->>U: chạy container umami
   U->>D: kết nối db:5432
   D-->>U: OK ngay lần đầu
   C-->>C: mọi service healthy, --wait kết thúc
@@ -192,7 +197,7 @@ docker inspect --format "{{json .State.Health}}" my-site-db-1
 
 | Sai lầm | Hậu quả | Đúng |
 | --- | --- | --- |
-| Healthcheck dùng lệnh không có trong image (ví dụ `bash` hay `pg_isready` trong image nginx) | Mãi `unhealthy`, `up --wait` báo lỗi | Kiểm tra lệnh có sẵn: `docker compose exec web which wget` |
+| Healthcheck dùng lệnh không có trong image (ví dụ `bash` hay `pg_isready` trong image nginx) | Mãi `unhealthy`, `up --wait` báo lỗi | Kiểm tra lệnh có sẵn: `docker compose exec web which wget`. Lệnh which (*cái nào*) in đường dẫn của chương trình nếu có, không in gì nếu không có |
 | Healthcheck gọi sai cổng (ví dụ `localhost:8080` trong container `web`) | Mãi `unhealthy` | Gọi cổng ứng dụng nghe **bên trong** container (nginx: 80) |
 | Có healthcheck nhưng `depends_on` vẫn dạng ngắn | Vẫn khởi động sớm | `condition: service_healthy` |
 | `start_period` quá ngắn cho ứng dụng chậm | `unhealthy` trước khi kịp sẵn sàng | Tăng `start_period` |

@@ -53,6 +53,8 @@ APP_SECRET=doi-chuoi-ngau-nhien-nay
 
 **Đọc hiểu:** mỗi dòng một cặp `TÊN=giá trị`, **không** có dấu cách quanh dấu `=`, không cần nháy. Đổi hai giá trị thành chuỗi dài, khó đoán của riêng bạn.
 
+**Mật khẩu chỉ dùng chữ cái, chữ số, `-` và `_`**, và dài (ví dụ 32 ký tự ngẫu nhiên như `k3Jx9-Qw7b_Lm2Rt8Vz4Pn6Yc1Hd5Fs0`). Lý do: mục 3 ghép mật khẩu vào giữa một địa chỉ `DATABASE_URL`, nơi các ký tự `@ : / # ? %` có nghĩa riêng (`@` ngăn cách mật khẩu với tên máy, `/` mở đầu tên database…), nên một mật khẩu có `@` làm Umami hiểu sai cả địa chỉ. Còn `$` bị Compose hiểu là đầu một biến `${…}`. Chuỗi dài chỉ gồm chữ và số vẫn đủ an toàn, vì độ khó đoán đến từ độ dài.
+
 Tạo bằng trình soạn thảo, đừng bằng `echo … > .env` trong Windows PowerShell 5.1: nó ghi file theo mã hóa UTF-16, Compose đọc không được.
 
 ## 3. Thay mật khẩu trong compose.yaml bằng chỗ trống
@@ -92,11 +94,12 @@ volumes:
 
 | Cơ chế | Viết | Xảy ra ở đâu, lúc nào | Dùng khi |
 | --- | --- | --- | --- |
-| **Variable substitution** (*thay thế biến*) | `${POSTGRES_PASSWORD}` trong `compose.yaml` | Compose đọc `.env` cạnh `compose.yaml` và **thay chữ** trong file, **trước khi** tạo container | Cần ghép giá trị vào chuỗi, như `DATABASE_URL`, hoặc dùng ở chỗ không phải biến môi trường, như `ports` |
+| **Variable substitution** (*thay thế biến*) | `${POSTGRES_PASSWORD}` trong `compose.yaml` | Compose đọc `.env` cạnh `compose.yaml` và **thay chữ** trong file, **trước khi** tạo container. Biến đặt sẵn trong terminal (`$env:WEB_PORT = "8081"` trên PowerShell, `export WEB_PORT=8081` trên bash) được **ưu tiên** hơn `.env` | Cần ghép giá trị vào chuỗi, như `DATABASE_URL`, hoặc dùng ở chỗ không phải biến môi trường, như `ports` |
 | **`env_file: .env`** | khóa trong service | Đưa **mọi dòng** của `.env` vào **bên trong** container, như nhiều `-e` | Container cần đọc nhiều biến; ở đây Umami đọc `APP_SECRET` theo cách này |
 
 - `${WEB_PORT:-8080}`: dùng `WEB_PORT` nếu có, **không có thì mặc định `8080`** (`:-` nghĩa là "nếu trống thì dùng"). Ai bị trùng cổng 8080 chỉ cần thêm `WEB_PORT=8081` vào `.env` của mình, không phải sửa `compose.yaml` chung của cả nhóm.
 - Mật khẩu giờ chỉ viết **một lần** trong `.env`, cả `db` và `umami` cùng dùng. Hết lỗi "hai chỗ không khớp" của chương 5.
+- `env_file: .env` đưa **mọi** dòng của `.env` vào container `umami`, nên Umami cũng nhận cả `POSTGRES_PASSWORD` (và `WEB_PORT` nếu có), dù nó chỉ cần `APP_SECRET`. Thừa nhưng vô hại ở đây; dự án lớn thường tách mỗi service một file env riêng để mỗi container chỉ biết đúng bí mật của nó.
 
 ## 4. Kiểm tra: docker compose config
 
@@ -175,6 +178,8 @@ Thêm `.env` vào cả `.dockerignore` (chương 3), để nó cũng không lọ
 | `The "POSTGRES_PASSWORD" variable is not set. Defaulting to a blank string.` | Không có `.env`, hoặc gõ sai tên biến | Tạo `.env` cạnh `compose.yaml`; so tên biến hai bên |
 | `env file …/.env not found` | `env_file: .env` mà chưa có file | `cp .env.example .env` |
 | `failed to read …/.env: line 1: unexpected character "�" in variable name` | File `.env` tạo bằng `echo >` trong Windows PowerShell 5.1 nên có mã hóa UTF-16 | Xóa file, tạo lại bằng VS Code (góc dưới phải ghi `UTF-8`) hoặc `Copy-Item .env.example .env` |
+| Umami không kết nối được database dù mật khẩu hai bên khớp nhau; log có địa chỉ hay tên máy lạ | Mật khẩu có ký tự `@ : / # ? %`, làm hỏng `DATABASE_URL` (xem bằng `docker compose config`) | Đổi mật khẩu chỉ gồm chữ, số, `-`, `_`; vì volume đã khởi tạo với mật khẩu cũ, `docker compose down -v` rồi `up -d` |
+| `docker compose config` cho thấy mật khẩu bị cắt hoặc thiếu một đoạn, có thể kèm cảnh báo `variable is not set` | Mật khẩu có `$`, Compose hiểu phần sau là tên biến | Bỏ `$` khỏi mật khẩu |
 | `password authentication failed` | Volume cũ giữ mật khẩu cũ | `docker compose down -v` (mất dữ liệu thử) rồi `up -d` |
 | `.env` vẫn hiện trong `git status` | Chưa có `.gitignore`, hoặc đã commit `.env` trước đó | Xem dòng đầu bảng "Sai lầm thường gặp" |
 | Lỗi khác, hoặc chưa hiểu vì sao | | Nhắn mentor, công khai hay **nhắn riêng** đều được (tab **Cài đặt** → "Hỏi ở đâu"). Nhớ **che mật khẩu** trước khi gửi |

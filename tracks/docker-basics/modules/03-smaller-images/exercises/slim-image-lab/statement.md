@@ -10,7 +10,7 @@ Làm lại hai bài của chương 3 trên máy bạn, rồi áp dụng vào rep
 
    ```text
    .git
-   .env
+   **/.env
    ```
 
    Build lại và kiểm tra trang vẫn chạy. Commit và push file này.

@@ -84,7 +84,7 @@ Service `hello` trong `compose.yaml` build từ thư mục con:
 ```yaml
   hello:
     build: ./hello-go
-    image: ghcr.io/ten-ban/hello-go:1.0.0
+    image: ghcr.io/ten-ban/hello-go:${HELLO_VERSION:-1.0.0}
     ports:
       - "8081:8080"
     healthcheck:
@@ -97,7 +97,9 @@ Service `hello` trong `compose.yaml` build từ thư mục con:
 **Đọc hiểu:**
 
 - `build: ./hello-go`: build context là thư mục `hello-go` (chương 2), Compose tìm `Dockerfile` trong đó.
-- Có **cả** `build` và `image`: Compose build rồi **đặt tên** image là `ghcr.io/ten-ban/hello-go:1.0.0`. Sau đó `docker compose push hello` đẩy đúng image đó lên GHCR (đã `docker login` ở chương 7). Thay `ten-ban` bằng tên GitHub của bạn, chữ thường.
+- Có **cả** `build` và `image`: Compose build rồi **đặt tên** image theo dòng `image`. Sau đó `docker compose push hello` đẩy đúng image đó lên GHCR (đã `docker login` ở chương 7). Thay `ten-ban` bằng tên GitHub của bạn, chữ thường.
+- `${HELLO_VERSION:-1.0.0}`: tag lấy từ biến `HELLO_VERSION` trong `.env`, không có thì là `1.0.0` (chương 6). **Phải tăng số trước mỗi lần push bản mới**: nếu giữ nguyên `1.0.0`, lần `up --build` sau sẽ dán nhãn `1.0.0` lên code mới và `compose push` **ghi đè** bản `1.0.0` trên GHCR, đúng điều chương 7 cấm. Sửa code `hello-go` rồi thì đặt `HELLO_VERSION=1.0.1` trong `.env`, `docker compose up -d --build --wait`, rồi `docker compose push hello`.
+- Dùng Mac chip Apple? `compose push` chỉ đẩy bản arm64. Để mentor (máy amd64) pull được, push bằng lệnh `docker buildx build --platform linux/amd64,linux/arm64 … --push ./hello-go` của chương 7, bài 2, mục 5.
 - `"8081:8080"`: chương trình Go nghe 8080 bên trong; 8080 trên máy đã dành cho `web`, nên mở ra cổng 8081.
 - Healthcheck dùng `wget`, có sẵn trong image `alpine` mà stage cuối dùng làm nền.
 

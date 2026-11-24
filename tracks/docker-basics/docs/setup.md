@@ -95,7 +95,7 @@ Kiểm tra thêm Compose (dùng từ chương 5):
 docker compose version
 ```
 
-Thấy `Docker Compose version v2.x` trở lên là được.
+Thấy `Docker Compose version v2.x` hoặc mới hơn là được (máy mới cài có thể hiện `v5.x`, cũng được).
 
 ## 4. Chip Apple Silicon (arm64)
 
@@ -110,7 +110,13 @@ Không cài được Docker (máy 4 GB RAM, máy trường không cho bật ảo
 - **GitHub Codespaces** (khuyên dùng): tạo một repo trên GitHub → nút **Code** → tab **Codespaces** → **Create codespace on main**. Terminal trong Codespaces có sẵn `docker` và `docker compose`. Tài khoản cá nhân có một lượng giờ miễn phí mỗi tháng; **dừng codespace khi không dùng** (trang [github.com/codespaces](https://github.com/codespaces)) để khỏi tốn giờ. Cổng như 8080 hiện ở tab **Ports**, bấm vào để mở trang.
 - **[Play with Docker](https://labs.play-with-docker.com/)**: đăng nhập bằng tài khoản Docker Hub, mỗi phiên dùng được vài giờ rồi tự xóa. Hợp để thử lệnh ở chương 1–4, không hợp để lưu bài.
 
-Máy chạy được nhưng chậm: tắt các stack không dùng (`docker compose down`), và trên Windows có thể giới hạn RAM cho WSL bằng file `%UserProfile%\.wslconfig`:
+Máy chạy được nhưng chậm: tắt các stack không dùng (`docker compose down`), và trên Windows có thể giới hạn RAM cho WSL. Mở (hoặc tạo) file cấu hình bằng PowerShell:
+
+```powershell
+notepad "$env:USERPROFILE\.wslconfig"
+```
+
+**Đọc hiểu:** `$env:USERPROFILE` là thư mục tài khoản của bạn (ví dụ `C:\Users\an`). Notepad hỏi có tạo file mới không thì chọn **Yes**, rồi dán nội dung:
 
 ```ini
 [wsl2]

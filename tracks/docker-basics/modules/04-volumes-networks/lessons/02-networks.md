@@ -78,16 +78,16 @@ Con số IP của bạn có thể khác. Đó chính là lý do ta dùng tên.
 Thử từ một container **không** gắn vào `lab`:
 
 ```bash
-docker run --rm alpine:3.22 sh -c 'getent hosts db || echo "khong tim thay db"'
+docker run --rm alpine:3.22 sh -c 'getent hosts db || echo khong-tim-thay-db'
 ```
 
 ```text
-khong tim thay db
+khong-tim-thay-db
 ```
 
 **Đọc hiểu:** không có `--network lab` thì container vào network mặc định của Docker, nơi không có ai tên `db`. `||` nghĩa là "nếu lệnh trước thất bại thì chạy lệnh sau". Container chỉ thấy nhau khi **cùng network**.
 
-![Sơ đồ network lab có DNS nội bộ. Bên trong, container psql gọi container db bằng tên ở db:5432; danh bạ DNS đổi tên db thành địa chỉ IP, IP có thể đổi còn tên thì không. Bên ngoài khung, một container không gắn --network lab gọi db thất bại với dòng khong tim thay db, và máy của bạn chỉ vào được container khi có -p. Chú thích: trong container, localhost là chính container đó.](../../../assets/network-dns.png)
+![Sơ đồ network lab có DNS nội bộ. Bên trong, container psql gọi container db bằng tên ở db:5432; danh bạ DNS đổi tên db thành địa chỉ IP, IP có thể đổi còn tên thì không. Bên ngoài khung, một container không gắn --network lab gọi db thất bại với dòng khong-tim-thay-db, và máy của bạn chỉ vào được container khi có -p. Chú thích: trong container, localhost là chính container đó.](../../../assets/network-dns.png)
 
 ```mermaid
 flowchart LR

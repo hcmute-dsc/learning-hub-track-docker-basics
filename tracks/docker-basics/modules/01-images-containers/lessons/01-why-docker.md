@@ -8,7 +8,7 @@ objectives:
   - "Phân biệt image, container và registry bằng ví dụ đời thường"
   - "Giải thích container là một tiến trình bị cách ly, khác máy ảo ở đâu"
 authors: [github:TienNHM]
-terms: [Docker, image, container, registry, virtual machine, kernel, Docker Desktop, daemon]
+terms: [Docker, image, container, registry, virtual machine, hypervisor, kernel, Docker Desktop, WSL, daemon]
 ---
 
 # Docker để làm gì? Image, container và máy ảo
@@ -77,7 +77,7 @@ Với hệ điều hành, một container chỉ là **một tiến trình bình 
 
 **Kernel** (*nhân, lõi*) là phần lõi của hệ điều hành, lo CPU, bộ nhớ, file và mạng. Mọi container trên một máy **dùng chung kernel** của máy đó. Không có hệ điều hành thứ hai nào phải khởi động.
 
-**Máy ảo** (*virtual machine*, VM) thì khác: nó giả lập **cả một máy tính** (CPU, RAM, ổ đĩa ảo) và chạy **một hệ điều hành đầy đủ, có kernel riêng** bên trong.
+**Máy ảo** (*virtual machine*, VM) thì khác: nó giả lập **cả một máy tính** (CPU, RAM, ổ đĩa ảo) và chạy **một hệ điều hành đầy đủ, có kernel riêng** bên trong. Phần mềm tạo và điều khiển các máy ảo gọi là **hypervisor** (*trình giám sát máy ảo*), ví dụ VirtualBox, VMware, Hyper-V.
 
 ![Hai cột so sánh. Bên trái là máy ảo: trên phần cứng có hypervisor, trên đó mỗi máy ảo có hệ điều hành khách và kernel riêng, rồi mới tới ứng dụng, nặng vài GB, khởi động mất cả phút. Bên phải là container: trên phần cứng có một hệ điều hành và một kernel Linux dùng chung, Docker chạy trên đó, mỗi container chỉ chứa ứng dụng và thư viện của nó, nặng vài chục MB, khởi động trong vài giây.](../../../assets/container-vs-vm.png)
 
@@ -86,7 +86,7 @@ Với hệ điều hành, một container chỉ là **một tiến trình bình 
 | Bên trong có | Cả một hệ điều hành, kernel riêng | Chỉ ứng dụng và thư viện của nó |
 | Kernel | Riêng cho mỗi máy ảo | Dùng chung kernel của máy chủ |
 | Dung lượng | Vài GB | Vài MB tới vài trăm MB |
-| Khởi động | Cả phút | Vài giây, thường dưới 1 giây |
+| Khởi động | Cả phút | Thường dưới 1 giây tới vài giây |
 | Chạy được trên một laptop | Vài cái | Hàng chục cái |
 | Cách ly | Rất mạnh | Đủ tốt cho đa số việc, yếu hơn máy ảo |
 
@@ -94,7 +94,7 @@ Ví von: máy ảo là **xây thêm một căn nhà** (móng, điện, nước r
 
 ### Thế còn Windows và macOS?
 
-Container cần kernel **Linux**. Windows và macOS không có kernel Linux, nên **Docker Desktop** lén chạy **một** máy Linux nhỏ ở bên dưới (trên Windows là WSL2), và mọi container của bạn chạy chung trong máy Linux đó. Bạn không cần quản lý máy ảo này; chỉ cần nhớ Docker Desktop phải đang chạy thì lệnh `docker` mới dùng được.
+Container cần kernel **Linux**. Windows và macOS không có kernel Linux, nên **Docker Desktop** lén chạy **một** máy Linux nhỏ ở bên dưới (trên Windows là **WSL** 2, *Windows Subsystem for Linux*, hệ thống con Linux cho Windows), và mọi container của bạn chạy chung trong máy Linux đó. Bạn không cần quản lý máy ảo này; chỉ cần nhớ Docker Desktop phải đang chạy thì lệnh `docker` mới dùng được.
 
 ```mermaid
 flowchart LR
